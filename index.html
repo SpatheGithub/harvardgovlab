@@ -1729,7 +1729,7 @@
     const at = new Int8Array(N).fill(-2), landed = new Uint8Array(N), rejoin = new Uint8Array(N);
     for (let i = 0; i < N; i++) {
       room[i] = rand(8, 34);
-      stiff[i] = rand(0.65, 1.35); lag[i] = Math.random() * 0.3; gold[i] = Math.random() < 0.09 ? 1 : 0;
+      stiff[i] = rand(0.65, 1.35); lag[i] = Math.random() * 0.45; gold[i] = Math.random() < 0.09 ? 1 : 0;
       const r = Math.pow(Math.random(), 0.55), a = rand(0, TAU), u = Math.random() * 2 - 1, s = Math.sqrt(1 - u * u);
       su[i] = r * s * Math.cos(a); sv[i] = r * u; sw[i] = r * s * Math.sin(a); ph[i] = rand(0, TAU);
     }
@@ -1746,6 +1746,7 @@
       weight: () => 1 - smooth((0.16 - mid(figBox())) / 0.26),   // they lift off as the figure goes under the header
       prep() { this.r = figBox(); },
       target(i) { tx[i] = this.r.left + glyph.gx[i]; ty[i] = this.r.top + glyph.gy[i]; },
+      anchor() { const r = figBox(); return { x: (r.left + r.right) / 2, y: (r.top + r.bottom) / 2, w: r.width, h: r.height }; },
     });
 
     // A stipple drawing: each dot takes one of its points, and the drawing itself fades in once
@@ -1761,6 +1762,7 @@
         name, eng, hidden: true, weight,
         prep() { this.r = eng.canvas.getBoundingClientRect(); this.edge = cover ? cover() : Infinity; },
         target(i) { const p = map[i]; tx[i] = this.r.left + eng.sx[p]; ty[i] = this.r.top + eng.sy[p]; },
+        anchor() { const r = eng.canvas.getBoundingClientRect(); return r.height ? { x: (r.left + r.right) / 2, y: (r.top + r.bottom) / 2, w: r.width, h: r.height } : null; },
       };
     };
 
@@ -1770,34 +1772,48 @@
       stations.push(drawingStation('stages', stages.engine, () => {
         const r = stages.engine.canvas.getBoundingClientRect();
         if (!r.height) return 0;
-        const arrive = smooth((0.9 - mid(r)) / 0.4);
-        const leave = stages.pinned ? smooth((pinState(stages.section, stages.panel).cover - 0.2) / 0.3) : smooth((0.3 - mid(r)) / 0.26);
+        const arrive = smooth((1.0 - mid(r)) / 0.5);
+        const leave = stages.pinned ? smooth((pinState(stages.section, stages.panel).cover - 0.12) / 0.4) : smooth((0.34 - mid(r)) / 0.34);
         return arrive * (1 - leave);
       }, () => (over && stages.pinned ? over.getBoundingClientRect().top : Infinity)));
     }
 
-    // 2. The year: a trail along the axis up to the current week, with a knot circling the week itself.
-    const axisLine = year && year.axisLine;
-    if (axisLine) {
+    // 2. The year: while the cards slide through the frame, the flock hovers in the open space
+    //    just above it, out of the way of the cards and the axis, leaning against the way the
+    //    year is moving and settling when it stops.
+    const crop = document.querySelector('.year-crop'), yearHead = document.querySelector('.year-head');
+    if (year && crop) {
+      let lastP = 0, lean = 0;
+      const spot = () => {
+        const c = crop.getBoundingClientRect();
+        if (!c.width) return null;
+        const h = yearHead ? yearHead.getBoundingClientRect() : null;
+        const top = h ? h.bottom + 12 : c.top - 100, bottom = c.top - 18, room = bottom - top;
+        return { x: (c.left + c.right) / 2, y: room > 56 ? (top + bottom) / 2 : c.top - 44, rx: Math.min(270, W * 0.2), ry: clamp(room * 0.34, 14, 50), mid: mid(c) };
+      };
       stations.push({
-        name: 'year', hidden: false,
+        name: 'year', hidden: false, soft: 0.72,
         weight() {
-          const r = axisLine.getBoundingClientRect();
-          if (!r.width) return 0;
-          const leave = year.wipe ? smooth((year.wipe.cover - 0.01) / 0.22) : 0;
-          return smooth((1.4 - mid(r)) / 0.4) * (1 - leave);
+          const s = spot();
+          if (!s) return 0;
+          const leave = year.wipe ? smooth(year.wipe.cover / 0.3) : 0;
+          return smooth((1.3 - s.mid) / 0.5) * (1 - leave);
         },
-        prep(t) { this.r = axisLine.getBoundingClientRect(); this.p = year.progress || 0; this.t = t; },
+        prep(t, dt) {
+          this.s = spot(); this.t = t;
+          const p = year.progress || 0, v = (p - lastP) / Math.max(dt, 1 / 240);
+          lastP = p;
+          lean = lerp(lean, clamp(-v * 900, -80, 80), 1 - Math.pow(0.05, dt));
+        },
         target(i) {
-          const head = this.r.left + this.r.width * this.p, cy = this.r.top + this.r.height / 2;
-          if (i % 5 < 2) {
-            const a = ph[i] + this.t * (1.1 + su[i] * 0.7), rr = 9 + 20 * Math.abs(sv[i]);
-            tx[i] = head + Math.cos(a) * rr; ty[i] = cy + Math.sin(a) * rr * 0.6;
-          } else {
-            const f = Math.pow((su[i] + 1) / 2, 1.6);
-            tx[i] = head - this.r.width * this.p * f; ty[i] = cy - 7 + sv[i] * 4;
-          }
+          const s = this.s, t = this.t;
+          const th = t * 0.45 * (0.7 + 0.6 * stiff[i]) + ph[i] * 0.15;
+          const u = su[i] * Math.cos(th) - sw[i] * Math.sin(th);
+          const v = sv[i] + 0.4 * Math.sin(u * 2.2 + t * 0.8);
+          tx[i] = s.x + s.rx * u + lean * (0.55 + 0.45 * stiff[i]) + 5 * Math.sin(t * 1.3 + sv[i] * 3);
+          ty[i] = s.y + s.ry * v + 3 * Math.sin(t * 1.7 + su[i] * 2.6);
         },
+        anchor() { const s = spot(); return s && { x: s.x, y: s.y, w: s.rx * 2, h: s.ry * 2 }; },
       });
     }
 
@@ -1809,10 +1825,11 @@
           const r = board.getBoundingClientRect();
           if (!r.width) return 0;
           const m = mid(r);
-          return smooth((0.95 - m) / 0.32) * (1 - smooth((0.3 - m) / 0.24));
+          return smooth((1.05 - m) / 0.45) * (1 - smooth((0.36 - m) / 0.36));
         },
         prep() { this.r = board.getBoundingClientRect(); },
         target(i) { tx[i] = this.r.left + this.r.width * (su[i] * 0.5 + 0.5); ty[i] = this.r.top + this.r.height * (sw[i] * 0.5 + 0.5); },
+        anchor() { const r = board.getBoundingClientRect(); return r.width ? { x: (r.left + r.right) / 2, y: (r.top + r.bottom) / 2, w: r.width, h: r.height } : null; },
       });
     }
 
@@ -1820,7 +1837,7 @@
     if (bookend && bookend.engine) {
       stations.push(drawingStation('footer', bookend.engine, () => {
         const r = bookend.engine.canvas.getBoundingClientRect();
-        return r.height ? smooth((1.02 - mid(r)) / 0.36) : 0;
+        return r.height ? smooth((1.1 - mid(r)) / 0.5) : 0;
       }));
     }
 
@@ -1921,7 +1938,7 @@
     const ESUM = EDDIES.reduce((s, w) => s + w[4], 0);
 
     let W = 1, H = 1, dpr = 1, first = true;
-    let ax = 0, ay = 0, avx = 0, avy = 0, homeX = 0, homeY = 0, lastPick = -10;
+    let ax = 0, ay = 0, avx = 0, avy = 0;
     let lastY = window.scrollY, scrollV = 0, lastScroll = -10, rushing = false, lastRush = -10;
     window.addEventListener('scroll', () => { lastScroll = performance.now() / 1000; }, { passive: true });
     const mouse = { x: -1e4, y: -1e4 };
@@ -1941,22 +1958,26 @@
     });
     if (!glyph) { canvas.remove(); return null; }
 
-    // Find open sky for the flock: of a few spots in the lower part of the screen, the one with
-    // the least on it, with a little loyalty to where it already is.
-    const pickHome = (R) => {
-      let best = Infinity, bx = homeX, by = homeY;
-      const xs = small ? [0.3, 0.5, 0.7] : [0.14, 0.32, 0.5, 0.68, 0.86], ys = [0.58, 0.73, 0.88];
-      for (const fx of xs) for (const fy of ys) {
-        const cx = W * fx, cy = H * fy, l = cx - R * 1.5, r = cx + R * 1.5, t = cy - R * 0.8, b = cy + R * 0.8;
-        let cover = 0;
-        for (let k = 0; k < oN; k++) {
-          const w = Math.min(r, oR[k]) - Math.max(l, oL[k]), h = Math.min(b, oB[k]) - Math.max(t, oT[k]);
-          if (w > 0 && h > 0) cover += w * h;
-        }
-        const score = cover / ((r - l) * (b - t)) + 0.18 * Math.hypot(cx - homeX, cy - homeY) / W + (fy < 0.6 ? 0.06 : 0);
-        if (score < best) { best = score; bx = cx; by = cy; }
+    // The flock's route: from the drawing you've just passed to the next one, in step with the
+    // scroll (halfway down the page between them, it's halfway along). So it's already waiting
+    // on the right side of the screen when the next drawing arrives, and it moves only as fast
+    // as you do.
+    const route = () => {
+      const mid = H * 0.5;
+      let a = null, b = null;
+      for (const st of stations) {
+        const p = st.anchor && st.anchor();
+        if (!p || !isFinite(p.y)) continue;
+        if (p.y <= mid) a = p; else if (!b) b = p;
       }
-      homeX = bx; homeY = by;
+      const fit = (p) => ({ x: clamp(p.x, W * 0.14, W * 0.86), y: clamp(p.y, H * 0.26, H * 0.76) });
+      if (a && b) {
+        const k = clamp((mid - a.y) / ((mid - a.y) + (b.y - mid)));
+        const A = fit(a), B = fit(b);
+        return { x: lerp(A.x, B.x, k), y: lerp(A.y, B.y, k), k, next: b };
+      }
+      const only = a || b || { x: W * 0.7, y: H * 0.7 };
+      return { ...fit(only), k: b ? 1 : 0, next: b };
     };
 
     const INK = { dark: ['244,240,232', '214,190,140'], light: ['24,36,65', '110,90,44'] };
@@ -1977,22 +1998,27 @@
       rushing = t - lastRush < 0.18;
       const calm = 1 - clamp((Math.abs(scrollV) - 300) / 900);
       const weights = stations.map((s) => s.weight());
-      stations.forEach((s, k) => { if (weights[k] > 0.3) s.prep(t); });
+      stations.forEach((s, k) => { if (weights[k] > 0.3) s.prep(t, dt); });
       gather();
 
-      // Where the flock gathers: open sky in the lower part of the screen, rechecked as the page
-      // moves under it; tugged up when you scroll fast, as if it were trailing you; quieter and
-      // tighter once you stop to read, and nearly out of sight while you type.
+      // Where the flock is: on its route between drawings, drifting a little, trailing slightly
+      // when you scroll fast; tighter once you stop to read, and nearly out of sight while you type.
+      // It follows the route on a smooth, critically damped spring, so it never lurches.
       const typing = document.activeElement && document.activeElement.matches('input, textarea, select');
       const resting = typing || t - lastScroll > 2.6;
       const pace = clamp(Math.abs(scrollV) / 1400);
-      const R = (small ? 78 : 132) * (resting ? 0.55 : 0.85 + 0.4 * pace);
-      if (first) { homeX = W * 0.7; homeY = H * 0.8; }
-      if (t - lastPick > (resting ? 2.5 : 0.7)) { lastPick = t; pickHome(R); }
-      const hx = homeX + W * (0.1 * Math.sin(t * 0.17) + 0.035 * Math.sin(t * 0.53 + 2)), hy = homeY + H * (0.04 * Math.sin(t * 0.29 + 1) + 0.015 * Math.sin(t * 0.71)) - clamp(scrollV * 0.05, -90, 90);
-      avx += ((hx - ax) * 2.2 - avx * 2.5) * dt; avy += ((hy - ay) * 2.2 - avy * 2.5) * dt;
+      const go = route();
+      const closing = go.next && go.next.w ? smooth((go.k - 0.55) / 0.4) : 0;
+      const nextR = closing ? clamp(Math.sqrt(go.next.w * go.next.h) * 0.3, 50, small ? 130 : 200) : 0;
+      const R = lerp((small ? 78 : 124) * (resting ? 0.6 : 0.85 + 0.35 * pace), nextR, closing);
+      const skipX = closing > 0.2 ? go.next.x : -1e4, skipY = closing > 0.2 ? go.next.y : -1e4;
+      const hx = go.x + W * 0.03 * Math.sin(t * 0.23), hy = go.y + H * 0.02 * Math.sin(t * 0.31 + 1) - clamp(scrollV * 0.04, -60, 60);
+      const om = 3;
+      avx += ((hx - ax) * om * om - 2 * om * avx) * dt; avy += ((hy - ay) * om * om - 2 * om * avy) * dt;
+      const asp = Math.hypot(avx, avy);
+      if (asp > 1100) { avx *= 1100 / asp; avy *= 1100 / asp; }
       ax += avx * dt; ay += avy * dt;
-      if (first) { ax = hx; ay = hy; }
+      if (first) { ax = hx; ay = hy; avx = avy = 0; }
       const FLOW = (small ? 70 : 96) * (resting ? 0.7 : 1);
       const steer = 1 - Math.exp(-2.6 * dt);
 
@@ -2002,10 +2028,10 @@
         // A flying dot joins the strongest station that's pulling hard enough, unless you're rushing.
         // (Different thresholds for joining and leaving, so a hovering scroll can't flip it back and forth.)
         let s = at[i];
-        if (s >= 0 && !(weights[s] > lag[i] + 0.27)) s = -1;
+        if (s >= 0 && !(weights[s] > lag[i] + 0.2)) s = -1;
         if (s < 0 && !rushing) {
           let best = 0;
-          for (let k = 0; k < weights.length; k++) if (weights[k] > lag[i] + 0.43 && weights[k] > best) { s = k; best = weights[k]; }
+          for (let k = 0; k < weights.length; k++) if (weights[k] > lag[i] + 0.32 && weights[k] > best) { s = k; best = weights[k]; }
         }
         const fresh = s !== at[i];
         if (fresh) {
@@ -2033,12 +2059,12 @@
             // flow jostles it, so the flock arrives in sweeping curves rather than straight lines.
             if (!fresh) { x[i] += tx[i] - ptx[i]; y[i] += ty[i] - pty[i]; }
             since[i] += dt;
-            const urge = 1 + 3 * smooth((since[i] - 0.35) / 0.8);
-            const K = 40 * stiff[i] * urge, D = 1.5 * Math.sqrt(K);
+            const urge = 1 + 1.2 * smooth((since[i] - 0.8) / 1.0);
+            const K = 20 * stiff[i] * urge, D = 1.9 * Math.sqrt(K);
             const ddx = tx[i] - x[i], ddy = ty[i] - y[i], dd = Math.hypot(ddx, ddy) + 0.01;
             let gx = tx[i], gy = ty[i];
             if (dd > 30) {
-              const arc = Math.min(dd * 0.3, 120) * (ph[i] < Math.PI ? 1 : -1) * (0.5 + 0.5 * stiff[i]) / urge;
+              const arc = Math.min(dd * 0.2, 80) * (ph[i] < Math.PI ? 1 : -1) * (0.5 + 0.5 * stiff[i]) / urge;
               gx += (-ddy / dd) * arc; gy += (ddx / dd) * arc;
               let fx = 0, fy = 0;
               for (const w of WAVES) { const c = w[4] * Math.cos(w[0] * x[i] + w[1] * y[i] + w[2] * t + w[3]); fx += c * w[5]; fy += c * w[6]; }
@@ -2047,9 +2073,11 @@
             }
             vx[i] += ((gx - x[i]) * K - vx[i] * D) * dt;
             vy[i] += ((gy - y[i]) * K - vy[i] * D) * dt;
+            const vsp = Math.hypot(vx[i], vy[i]), vcap = 360 + Math.min(500, dd * 0.5);
+            if (vsp > vcap) { vx[i] *= vcap / vsp; vy[i] *= vcap / vsp; }
             x[i] += vx[i] * dt; y[i] += vy[i] * dt;
             const gap = Math.abs(tx[i] - x[i]) + Math.abs(ty[i] - y[i]);
-            if (gap < 4 || (gap < 14 && since[i] > 0.9)) { landed[i] = 1; x[i] = tx[i]; y[i] = ty[i]; }
+            if (gap < 4 || (gap < 14 && since[i] > 1.2)) { landed[i] = 1; x[i] = tx[i]; y[i] = ty[i]; }
           }
           ptx[i] = tx[i]; pty[i] = ty[i];
           if (landed[i]) counts[s]++;
@@ -2075,7 +2103,7 @@
         dvx += (ox / od) * pull; dvy += (oy / od) * pull / 1.9;
         dvx += 14 * Math.sin(ph[i] + t * 2.3); dvy += 10 * Math.cos(ph[i] * 1.3 + t * 1.9);
         vx[i] += (dvx - vx[i]) * steer * stiff[i]; vy[i] += (dvy - vy[i]) * steer * stiff[i];
-        if (calm > 0.05) avoid(i, (small ? 700 : 2600) * calm, dt, -1e4, -1e4); else { inside[i] = 0; near[i] = 0; }
+        if (calm > 0.05) avoid(i, (small ? 700 : 2600) * calm, dt, skipX, skipY); else { inside[i] = 0; near[i] = 0; }
         // keep the flock on the screen, and hurry back any bird that got left off it
         const top = 64, lo = 8, hi = W - 8, bottom = H - 8;
         const offX = x[i] < lo ? lo - x[i] : x[i] > hi ? hi - x[i] : 0, offY = y[i] < top ? top - y[i] : y[i] > bottom ? bottom - y[i] : 0;
@@ -2114,7 +2142,7 @@
           const offT = Math.max(0, -ty[i] - 60, ty[i] - H - 60, -tx[i] - 60, tx[i] - W - 60);
           if (offT > 0 && !landed[i]) a *= clamp(1 - offT / 260);
           else if (st.absorb) a = landed[i] ? 0 : clamp(dist / st.absorb);
-          else a = 0.9;
+          else a = st.soft || 0.9;
         }
         al[i] += (a - al[i]) * fadeRate;
         if (al[i] < 0.06 || y[i] < -10 || y[i] > H + 10 || x[i] < -10 || x[i] > W + 10) continue;
