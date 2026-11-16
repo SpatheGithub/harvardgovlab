@@ -32,16 +32,17 @@
   /*
     Design notes
     - Color: the navy and gold of GovLab's own Pitch Day poster, on warm paper.
-    - Type: Newsreader for display (close to the poster's serif) and Public Sans, the
-      U.S. Web Design System face, for everything else. Both are served from /fonts.
+    - Type: Besley for headings, a revival of Clarendon, the sturdy face of 1800s American
+      posters and public notices; Public Sans, the U.S. Web Design System face, for
+      everything else. No italic accents. Both are served from /fonts.
     - Flow: the page moves in scenes. A scene pins while its own animation plays (the dome
       turning into the flask, the four program stages, the year), then the next scene
       slides up over it.
-    - Motion language: dots (the stipple drawings, the halftone photo), print crop marks
-      around whatever is in focus, and a split-flap board for Pitch Day.
+    - Motion language: dots (the stipple drawings, the halftone photo, and one swarm that
+      carries them from drawing to drawing down the page), print crop marks around whatever
+      is in focus, and a split-flap board for Pitch Day.
   */
-  @font-face { font-family: "Newsreader"; font-style: normal; font-weight: 200 800; font-display: swap; src: url("fonts/newsreader-opsz.woff2") format("woff2"); }
-  @font-face { font-family: "Newsreader"; font-style: italic; font-weight: 200 800; font-display: swap; src: url("fonts/newsreader-opsz-italic.woff2") format("woff2"); }
+  @font-face { font-family: "Besley"; font-style: normal; font-weight: 400 900; font-display: swap; src: url("fonts/besley-wght.woff2") format("woff2"); }
   @font-face { font-family: "Public Sans"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("fonts/public-sans.woff2") format("woff2"); }
 
   :root {
@@ -62,7 +63,7 @@
     --pad: clamp(20px, 5vw, 64px);
     --ease: cubic-bezier(0.22, 0.8, 0.16, 1);
     --expo: cubic-bezier(0.16, 1, 0.3, 1);
-    --serif: "Newsreader", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+    --serif: "Besley", "Clarendon", "Rockwell", Georgia, serif;
     --sans: "Public Sans", "Helvetica Neue", Arial, sans-serif;
   }
 
@@ -81,8 +82,9 @@
   :focus-visible { outline: 3px solid var(--navy); outline-offset: 3px; }
   .dark :focus-visible, .site-header :focus-visible { outline-color: var(--gold); }
   p { margin: 0; }
-  h1, h2, h3 { margin: 0; font-family: var(--serif); font-optical-sizing: auto; font-weight: 500; }
-  h2 { font-size: clamp(2.5rem, 1.5rem + 3.2vw, 4.75rem); line-height: 1; letter-spacing: -0.02em; }
+  h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 500; }
+  h1, h2 { font-weight: 600; }
+  h2 { font-size: clamp(2rem, 1.25rem + 3vw, 4.25rem); line-height: 1.02; letter-spacing: -0.02em; }
   .wrap { max-width: 1320px; margin-inline: auto; padding-inline: var(--pad); }
   .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; }
   .dark { background: var(--navy); color: var(--cream); }
@@ -120,14 +122,13 @@
   .brand img { height: 40px; width: auto; filter: brightness(0) invert(1); }
   .brand-org { font-size: 0.8125rem; font-weight: 600; line-height: 1.2; padding-left: 14px; border-left: 1px solid rgba(244, 240, 232, 0.45); }
   .site-nav ul { display: flex; align-items: center; gap: clamp(14px, 2.6vw, 34px); list-style: none; margin: 0; padding: 0; }
-  .site-nav a { display: block; font-size: 0.9375rem; font-weight: 600; text-decoration: none; padding-block: 6px; border-bottom: 1.5px solid transparent; }
-  .site-nav a:hover { border-bottom-color: var(--gold); }
+  .site-nav a { display: block; font-size: 0.9375rem; font-weight: 600; text-decoration: none; padding-block: 6px; border-bottom: 1.5px solid transparent; white-space: nowrap; }
+  .site-nav a:hover, .site-nav a.is-current { border-bottom-color: var(--gold); }
   .site-nav .nav-apply { padding: 9px 15px; border: 0; background: var(--gold); color: var(--navy); }
   .site-nav .nav-apply:hover { background: var(--cream); }
 
   /* ---------- Scenes ---------- */
   .scene { position: relative; }
-  .over { box-shadow: 0 -32px 64px -32px rgba(6, 10, 24, 0.6); }
   .pin-cover { position: absolute; inset: 0; z-index: 6; background: #060A18; opacity: 0; pointer-events: none; }
   .hero-wrap { z-index: 1; }
   .outcomes { z-index: 2; }
@@ -142,17 +143,13 @@
   .hero-grid { flex: 1 1 auto; display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; align-items: center; padding-block: clamp(20px, 4.5vh, 64px) clamp(16px, 3vh, 40px); }
   .hero-text { grid-column: 1 / span 7; background: var(--navy); }   /* same navy; lets contrast checkers see it inside the pinned panel */
   .hero-title {
-    font-size: min(6.2vw, 9.2vh, 5.25rem); line-height: 0.98; letter-spacing: -0.025em; font-weight: 500;
+    font-size: min(5.1vw, 8.4vh, 4.4rem); line-height: 1.02; letter-spacing: -0.02em; font-weight: 600;
   }
   .hero-title .line { display: block; overflow: hidden; padding-block: 0.04em 0.16em; margin-block: -0.04em -0.16em; }
   .hero-title .l { display: inline-block; }
-  .hero-title .it { font-style: italic; font-weight: 400; color: var(--gold); }
-  .motion .hero-title .l { transform: translateY(112%); font-weight: 300; animation: rise-in 1.25s var(--expo) forwards; animation-delay: calc(0.15s + var(--i) * 0.12s); }
-  .motion .hero-title .it { font-weight: 200; animation-name: rise-in-it; }
-  @keyframes rise-in { to { transform: none; font-weight: 500; } }
-  .motion .hero-title.is-done .l { animation: none; transform: none; font-weight: 500; }
-  .motion .hero-title.is-done .it { font-weight: 400; }
-  @keyframes rise-in-it { to { transform: none; font-weight: 400; } }
+  .motion .hero-title .l { transform: translateY(112%); font-weight: 400; animation: rise-in 1.25s var(--expo) forwards; animation-delay: calc(0.15s + var(--i) * 0.12s); }
+  @keyframes rise-in { to { transform: none; font-weight: 600; } }
+  .motion .hero-title.is-done .l { animation: none; transform: none; font-weight: 600; }
   .lede { margin-top: clamp(18px, 3vh, 34px); max-width: 44ch; font-size: clamp(1.125rem, 1rem + 0.4vw, 1.3125rem); line-height: 1.5; color: var(--mist); }
   .actions { margin-top: clamp(24px, 4.4vh, 44px); display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; }
   .motion .hero .lede, .motion .hero .actions { opacity: 0; animation: settle 1s var(--ease) 0.6s forwards; }
@@ -170,7 +167,6 @@
     padding: 4px 6px 8px; background: none; border: 0; cursor: pointer;
     color: var(--dim); transition: color 0.3s var(--ease);
   }
-  .morph-toggle .lab { font-style: italic; font-weight: 400; }
   .morph-toggle button[aria-pressed="true"], .morph-toggle button:hover { color: var(--cream); }
   .morph-track { position: relative; width: 92px; height: 1.5px; background: rgba(244, 240, 232, 0.28); }
   .morph-track::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: calc(var(--m) * 100%); background: var(--gold); }
@@ -183,22 +179,31 @@
   .hero-next .when { font-size: 1rem; color: var(--mist); transition: color 0.3s var(--ease); }
   .hero-next .arrow { margin-left: auto; font-size: 1.25rem; transition: transform 0.35s var(--ease); }
   .hero-next:hover .when { color: var(--cream); }
+  .hero-next .soon { align-self: center; padding: 3px 9px; font-size: 0.8125rem; font-weight: 700; color: var(--navy); background: var(--gold); }
+  .hero-next[hidden], .hero-next .soon[hidden] { display: none; }
   .hero-next:hover .arrow { transform: translateX(6px); }
 
   /* ---------- 2. In brief: outcomes, facts, photo ---------- */
   .outcomes { background: var(--cream); padding-block: clamp(84px, 11vw, 150px) clamp(76px, 9vw, 128px); }
   .outcomes-grid { row-gap: 56px; align-items: start; }
-  .statement {
-    grid-column: 1 / span 7; font-family: var(--serif); font-weight: 400;
-    font-size: clamp(1.75rem, 1rem + 2.3vw, 3.05rem); line-height: 1.16; letter-spacing: -0.015em;
+  .raised { grid-column: 1 / span 7; }
+  .figure {
+    font-family: var(--serif); font-weight: 600;
+    font-size: clamp(5.25rem, 2.4rem + 9vw, 11rem); line-height: 0.9; letter-spacing: -0.03em;
   }
-  .statement strong {
-    font-weight: 600;
-    background: linear-gradient(var(--gold-tint), var(--gold-tint)) 0 88% / 100% 0.34em no-repeat;
-    -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  .motion .raised .figure { opacity: 0; transform: translateY(0.12em); transition: opacity 1s var(--ease), transform 1.3s var(--expo); }
+  .motion .raised.is-in .figure { opacity: 1; transform: none; }
+  .motion .raised.poured .figure { transform: none; transition: none; }
+  .pour { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; visibility: hidden; }
+  .swarm { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 24; pointer-events: none; }
+  .figure-cap { margin-top: clamp(16px, 2vw, 24px); max-width: 32ch; font-size: clamp(1.125rem, 1rem + 0.45vw, 1.4375rem); line-height: 1.4; color: var(--ink-soft); }
+  .backers {
+    display: flex; flex-wrap: wrap; row-gap: 4px; list-style: none; margin: clamp(14px, 1.6vw, 22px) 0 0; padding: 0;
+    font-family: var(--serif); font-weight: 500; font-size: clamp(1.3125rem, 1rem + 0.95vw, 2rem); line-height: 1.25; letter-spacing: -0.01em;
   }
-  .motion .statement strong { background-size: 0% 0.34em; transition: background-size 1s var(--ease) calc(0.2s + var(--i) * 0.18s); }
-  .motion .statement.is-in strong { background-size: 100% 0.34em; }
+  .backers li + li::before { content: "/"; margin: 0 0.42em; font-weight: 400; color: var(--gold-deep); }
+  .motion .backers li { opacity: 0; transform: translateY(10px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); transition-delay: calc(0.4s + var(--i) * 0.13s); }
+  .motion .raised.is-in .backers li { opacity: 1; transform: none; }
   .facts { grid-column: 9 / span 4; margin: 8px 0 0; }
   .facts > div { position: relative; padding: 14px 0 18px; }
   .facts > div::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1.5px; background: var(--navy); transform-origin: left; }
@@ -223,13 +228,22 @@
   figcaption { margin-top: 12px; font-size: 0.9375rem; color: var(--ink-soft); }
 
   .included { margin-top: clamp(64px, 8vw, 112px); }
-  .included h3 { font-size: clamp(1.875rem, 1.3rem + 1.4vw, 2.75rem); line-height: 1.05; letter-spacing: -0.015em; }
+  .included h3 { font-size: clamp(1.75rem, 1.25rem + 1.3vw, 2.5rem); line-height: 1.05; letter-spacing: -0.015em; font-weight: 600; }
   .included dl { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px 24px; margin: 28px 0 0; }
   .included dl > div { border-top: 1.5px solid var(--navy); padding-top: 14px; }
   .included dt { font-weight: 800; }
   .included dd { margin: 6px 0 0; font-size: 1rem; line-height: 1.5; color: var(--ink-soft); }
 
   /* ---------- Crop marks around whatever is in focus ---------- */
+  .finder { position: fixed; inset: 0; z-index: 25; pointer-events: none; transition: opacity 0.4s var(--ease); }
+  .finder.is-off { opacity: 0; }
+  .finder i { position: absolute; left: 0; top: 0; width: 22px; height: 22px; border: 0 solid var(--gold); will-change: transform; transition: border-color 0.45s var(--ease); }
+  .finder.on-light i { border-color: var(--gold-deep); }
+  .finder .tl { border-top-width: 1.5px; border-left-width: 1.5px; }
+  .finder .tr { border-top-width: 1.5px; border-right-width: 1.5px; }
+  .finder .bl { border-bottom-width: 1.5px; border-left-width: 1.5px; }
+  .finder .br { border-bottom-width: 1.5px; border-right-width: 1.5px; }
+  .has-finder .crop { visibility: hidden; }
   .crop { position: absolute; inset: 0; pointer-events: none; }
   .crop i { position: absolute; width: 22px; height: 22px; border: 0 solid var(--gold); }
   .crop .tl { left: 0; top: 0; border-top-width: 1.5px; border-left-width: 1.5px; }
@@ -248,7 +262,7 @@
   .stages li { border-bottom: 1px solid var(--line-dark); }
   .stage-h, .stage-btn { display: grid; grid-template-columns: 3.25rem minmax(0, 1fr); align-items: baseline; }
   .js .stage-h { display: block; }
-  .stage-h { padding: 14px 0; font-size: clamp(1.375rem, 1.1rem + 0.6vw, 1.75rem); line-height: 1.15; letter-spacing: -0.01em; color: var(--cream); }
+  .stage-h { padding: 14px 0; font-size: clamp(1.3125rem, 1.05rem + 0.55vw, 1.625rem); line-height: 1.15; letter-spacing: -0.005em; color: var(--cream); }
   .stage-h .n { font-family: var(--sans); font-size: 0.8125rem; font-weight: 700; letter-spacing: 0.02em; color: var(--gold); }
   .stage-btn { all: unset; box-sizing: border-box; display: grid; grid-template-columns: 3.25rem minmax(0, 1fr); align-items: baseline; width: 100%; cursor: pointer; }
   .stage-d > p { padding: 0 0 18px 3.25rem; font-size: 1rem; line-height: 1.5; color: var(--mist); }
@@ -277,12 +291,18 @@
   .year-head { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; row-gap: 18px; align-items: end; }
   .year-head h2 { grid-column: 1 / span 6; }
   .year-head p { grid-column: 7 / span 6; max-width: 48ch; color: var(--ink-soft); }
+  .year-head .guests { grid-row: 2; margin-top: -8px; font-size: 0.9375rem; }
+  .guests a { color: var(--navy); text-decoration-color: var(--gold-deep); text-underline-offset: 3px; }
+  .event { scroll-margin-top: calc(var(--hdr) + 16px); }
+  .event.is-flash { animation: flash 1.6s var(--ease); }
+  @keyframes flash { 0%, 35% { box-shadow: inset 0 0 0 3px var(--gold-deep); } 100% { box-shadow: inset 0 0 0 3px rgba(110, 90, 44, 0); } }
+  .year-wipe { position: absolute; inset: 0; z-index: 5; visibility: hidden; pointer-events: none; background: var(--navy); }
   .events { list-style: none; margin: clamp(40px, 6vw, 72px) 0 0; padding: 0; }
   .event { position: relative; display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); column-gap: 32px; row-gap: 6px; border-top: 1.5px solid var(--navy); padding: 18px 0 26px; }
   .event:last-child { border-bottom: 1.5px solid var(--navy); }
-  .event time { grid-row: span 3; font-family: var(--serif); font-size: 1.625rem; line-height: 1.05; letter-spacing: -0.01em; font-variant-numeric: lining-nums; }
+  .event time { grid-row: span 3; font-family: var(--serif); font-weight: 500; font-size: 1.5rem; line-height: 1.05; letter-spacing: -0.01em; font-variant-numeric: lining-nums; }
   .event .kind { font-size: 0.8125rem; font-weight: 700; color: var(--gold-deep); }
-  .event h3 { font-size: clamp(1.375rem, 1.15rem + 0.5vw, 1.625rem); line-height: 1.2; letter-spacing: -0.01em; }
+  .event h3 { font-size: clamp(1.25rem, 1.1rem + 0.45vw, 1.5rem); line-height: 1.2; letter-spacing: -0.005em; }
   .event p { font-size: 1rem; line-height: 1.5; color: var(--ink-soft); max-width: 52ch; }
   .event.is-next time, .event.is-next .kind { color: var(--gold-deep); }
   .event.is-next::after { content: "Up next"; position: absolute; right: 0; top: 18px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; color: var(--cream); background: var(--navy); padding: 4px 8px; }
@@ -292,7 +312,7 @@
   /* ---------- 5. Pitch Day ---------- */
   .pitch { padding-block: clamp(96px, 12vw, 160px) clamp(80px, 10vw, 140px); }
   .pitch-top { text-align: center; }
-  .pitch-kicker { font-family: var(--serif); font-style: italic; font-size: clamp(1.25rem, 1rem + 0.8vw, 1.75rem); color: var(--gold); }
+  .pitch-kicker { font-family: var(--sans); font-weight: 700; font-size: clamp(1rem, 0.94rem + 0.25vw, 1.125rem); color: var(--gold); }
   .pitch h2 { margin-top: 10px; font-size: clamp(3.5rem, 1rem + 10vw, 10rem); line-height: 0.9; letter-spacing: -0.035em; }
   .has-board h2 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap; }
   .board { display: none; }
@@ -325,26 +345,37 @@
   .pitch-info { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: clamp(48px, 6vw, 80px) 0 0; }
   .pitch-info > div { border-top: 1px solid var(--line-dark); padding-top: 16px; }
   .pitch-info dt { font-size: 0.875rem; font-weight: 700; color: var(--gold); }
-  .pitch-info dd { margin: 8px 0 0; font-family: var(--serif); font-size: clamp(1.25rem, 1.1rem + 0.4vw, 1.5rem); line-height: 1.3; }
+  .pitch-info dd { margin: 8px 0 0; font-family: var(--serif); font-weight: 500; font-size: clamp(1.1875rem, 1.05rem + 0.4vw, 1.4375rem); line-height: 1.3; }
   .pitch-info dd.plain { font-family: var(--sans); font-size: 1.0625rem; line-height: 1.5; color: var(--mist); }
+  .clock-btn {
+    display: flex; align-items: center; gap: 10px; margin-top: 14px; padding: 9px 14px 9px 12px; cursor: pointer;
+    font: inherit; font-size: 0.9375rem; font-weight: 700; color: var(--cream); background: none; border: 1.5px solid var(--gold);
+    transition: background-color 0.3s var(--ease), color 0.3s var(--ease);
+  }
+  .clock-btn[hidden] { display: none; }
+  .clock-btn::before { content: ""; width: 14px; height: 14px; border: 1.5px solid currentColor; border-radius: 50%; background: linear-gradient(currentColor, currentColor) 50% 3px / 1.5px 5px no-repeat; }
+  .clock-btn:hover, .clock-btn[aria-pressed="true"] { background: var(--gold); color: var(--navy); }
+  .clock-btn:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .lineup-note { margin-top: 18px; max-width: 40ch; font-size: 0.9375rem; color: var(--mist); }
+  .lineup-note a { color: var(--cream); text-decoration-color: var(--gold); }
   .pitch-cols { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 24px; row-gap: 40px; margin-top: clamp(48px, 6vw, 80px); }
   .judges { grid-column: 1 / span 5; }
   .lineup { grid-column: 7 / span 6; }
-  .pitch-h { font-family: var(--serif); font-style: italic; font-size: clamp(1.5rem, 1.2rem + 0.9vw, 2.125rem); color: var(--gold); }
+  .pitch-h { font-family: var(--serif); font-weight: 600; font-size: clamp(1.375rem, 1.15rem + 0.8vw, 1.875rem); letter-spacing: -0.01em; color: var(--gold); }
   .pills { display: flex; flex-wrap: wrap; gap: 10px; list-style: none; margin: 18px 0 0; padding: 0; }
   .pills li { border: 1.5px solid rgba(244, 240, 232, 0.75); border-radius: 999px; padding: 9px 18px; font-size: 0.9375rem; font-weight: 600; }
   .logos { display: flex; flex-wrap: wrap; align-items: center; gap: 22px 40px; list-style: none; margin: 22px 0 0; padding: 0; }
   .logos img { height: 40px; width: auto; }
   .logos .wordmark img { height: 34px; }
-  .pitch-prize { margin-top: clamp(48px, 6vw, 72px); max-width: 52ch; font-family: var(--serif); font-size: clamp(1.375rem, 1.1rem + 0.8vw, 1.875rem); line-height: 1.3; }
+  .pitch-prize { margin-top: clamp(48px, 6vw, 72px); max-width: 50ch; font-family: var(--serif); font-weight: 400; font-size: clamp(1.3125rem, 1.05rem + 0.75vw, 1.75rem); line-height: 1.32; }
   .pitch-prize strong { font-weight: 600; color: var(--gold); }
   .pitch-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 28px; margin-top: 28px; }
   .pitch-note { max-width: 40ch; font-size: 0.9375rem; color: var(--mist); }
-  .alumni { margin-top: clamp(56px, 7vw, 88px); border-top: 1px solid var(--line-dark); padding-top: 20px; font-size: 1rem; color: var(--mist); }
+  .alumni { margin-top: 14px; text-align: center; font-size: 0.9375rem; color: var(--mist); }
 
   /* Type a startup name and the board flips to it. */
   .board-try { display: none; }
-  .has-board .board-try { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; margin-top: 18px; }
+  .has-board .board-try { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 18px; margin-top: clamp(26px, 3vw, 40px); }
   .board-try label { font-size: 1rem; font-weight: 700; }
   .board-try input[type="text"] {
     width: min(100%, 19rem); min-height: 52px; padding: 10px 16px;
@@ -360,6 +391,10 @@
   .apply .section-head { grid-column: 1 / span 4; }
   .apply .section-head p { margin-top: 18px; max-width: 34ch; }
   .apply .section-head p + p { margin-top: 14px; }
+  .apply .section-head .carry { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin-top: 16px; font-size: 0.9375rem; font-weight: 700; }
+  .carry[hidden] { display: none !important; }
+  .carry-name { position: relative; padding: 5px 9px 4px; font-size: 0.9375rem; font-weight: 800; letter-spacing: 0.06em; color: var(--cream); background: var(--navy); }
+  .carry-name::after { content: ""; position: absolute; left: 0; right: 0; top: calc(50% - 0.5px); height: 1px; background: rgba(4, 7, 20, 0.8); }
   .signup { position: relative; grid-column: 6 / span 7; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px 20px; align-content: start; }
   .field { display: flex; flex-direction: column; gap: 8px; }
   .field-wide { grid-column: 1 / -1; }
@@ -398,10 +433,20 @@
   /* Section headings rise out of their own slot, like the headline. */
   .rise-line { display: block; overflow: hidden; padding-block: 0.04em 0.16em; margin-block: -0.04em -0.16em; }
   .rise { display: inline-block; }
-  .motion .rise { transform: translateY(108%); font-weight: 300; transition: transform 1.2s var(--expo), font-weight 1.2s var(--expo); }
-  .motion .is-in .rise { transform: none; font-weight: 500; }
+  .motion .rise { transform: translateY(108%); font-weight: 400; transition: transform 1.2s var(--expo), font-weight 1.2s var(--expo); }
+  .motion .is-in .rise { transform: none; font-weight: 600; }
 
   /* ---------- Footer ---------- */
+  .footer-sign {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(220px, 32%); align-items: center; column-gap: 24px;
+    padding-top: clamp(56px, 8vw, 112px);
+    background: linear-gradient(var(--line-dark), var(--line-dark)) 50% 100% / calc(100% - 2 * var(--pad)) 1px no-repeat;
+  }
+  .sign-line { font-family: var(--serif); font-weight: 600; font-size: clamp(2rem, 1rem + 3.3vw, 4.25rem); line-height: 1.04; letter-spacing: -0.02em; padding-bottom: clamp(36px, 5vw, 64px); }
+  .sign-object { position: relative; height: clamp(260px, 30vw, 400px); }
+  .sign-object canvas { position: absolute; inset: 0; width: 100%; height: 100%; touch-action: pan-y; }
+  html:not(.js) .sign-object { display: none; }
+  html:not(.js) .footer-sign { grid-template-columns: minmax(0, 1fr); }
   .site-footer .grid { padding-block: 56px 36px; row-gap: 32px; }
   .footer-brand { grid-column: 1 / span 5; }
   .footer-brand img { height: 52px; width: auto; filter: brightness(0) invert(1); }
@@ -419,18 +464,18 @@
   @media (min-width: 1000px) and (min-height: 700px) {
     .motion .hero-wrap { height: calc(200svh + 90vh); }
     .motion .hero { position: sticky; top: 0; height: 100svh; min-height: 0; }
-    .motion .hero-wrap + .over { margin-top: -100svh; }
+    .motion .hero-wrap + .over { margin-top: -100svh; box-shadow: 0 -32px 64px -32px rgba(6, 10, 24, 0.6); }
   }
   .motion.hero-loose .hero-wrap { height: auto; }
   .motion.hero-loose .hero { position: relative; height: auto; min-height: 100svh; }
-  .motion.hero-loose .hero-wrap + .over { margin-top: 0; }
+  .motion.hero-loose .hero-wrap + .over { margin-top: 0; box-shadow: none; }
   .motion .program { height: calc(200svh + 4 * 62vh); }
   .motion .program .rail-pin { position: sticky; top: 0; height: 100svh; overflow: hidden; padding-block: calc(var(--hdr) + clamp(16px, 4vh, 48px)) clamp(18px, 3.4vh, 36px); }
-  .motion .program + .over { margin-top: -100svh; }
+  .motion .program + .over { margin-top: -100svh; box-shadow: 0 -32px 64px -32px rgba(6, 10, 24, 0.6); }
   @media (min-width: 900px) {
     .motion .year { height: calc(200svh + var(--track, 220vh)); }
     .motion .year .rail-pin { position: sticky; top: 0; height: 100svh; overflow: hidden; padding-block: calc(var(--hdr) + clamp(20px, 5vh, 56px)) clamp(18px, 3.4vh, 36px); }
-    .motion .year + .over { margin-top: -100svh; }
+    .motion .year + .over { margin-top: -100svh; box-shadow: none; }   /* the Dec 1 card grows into it, so no seam */
     .motion .year-view { --card: clamp(240px, 22vw, 300px); position: relative; margin-block: auto; }
     .motion .events {
       display: flex; margin: 0; padding: 0 calc(50% - var(--card) / 2); will-change: transform;
@@ -440,10 +485,12 @@
       border-top: 0; border-bottom: 0; border-left: 1.5px solid rgba(24, 36, 65, 0.25);
       padding: 26px 28px 30px; margin-right: 0;
     }
+    .motion .event { transition: background-color 0.5s var(--ease); }
+    .motion .event.is-active { background: #FFFDF8; }
     .motion .event time, .motion .event h3 { color: var(--ink-soft); transition: color 0.5s var(--ease); }
     .motion .event.is-active time, .motion .event.is-active h3 { color: var(--navy); }
     .motion .event:last-child { border-bottom: 0; }
-    .motion .event time { grid-row: auto; font-size: clamp(2.25rem, 1.6rem + 1.6vw, 3.25rem); line-height: 0.95; margin-bottom: 10px; }
+    .motion .event time { grid-row: auto; font-size: clamp(2rem, 1.4rem + 1.5vw, 2.875rem); line-height: 0.98; margin-bottom: 10px; }
     .motion .event.is-next::after { top: 28px; right: 24px; }
     .motion .year-crop { display: block; position: absolute; left: calc(50% - var(--card) / 2); width: var(--card); top: 0; bottom: 0; pointer-events: none; }
     .motion .year-axis { display: block; position: relative; height: 34px; margin-top: clamp(16px, 3vh, 32px); }
@@ -460,8 +507,8 @@
     .hero-grid { row-gap: 8px; align-content: start; }
     .hero-text, .js .hero-object { grid-column: 1 / -1; }
     .js .hero-object { height: clamp(330px, 72vw, 480px); margin-top: 20px; }
-    .hero-title { font-size: min(9.4vw, 4.75rem); }
-    .statement, .facts { grid-column: 1 / -1; }
+    .hero-title { font-size: min(calc((100vw - 2 * var(--pad)) / 10), 4.25rem); }
+    .raised, .facts { grid-column: 1 / -1; }
     .facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 24px; }
     .program-text, .js .stage-frame { grid-column: 1 / -1; }
     .included dl { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -480,6 +527,7 @@
   }
   @media (max-width: 960px) {
     .apply .section-head, .signup, .footer-brand, .footer-nav, .footer-contact { grid-column: 1 / -1; }
+    .year-head .guests { grid-row: auto; margin-top: 0; }
     .signup { margin-top: 36px; }
     .year-head h2, .year-head p { grid-column: 1 / -1; }
     .stamp { top: -70px; right: -6px; }
@@ -493,7 +541,7 @@
     :root { --hdr: 58px; }
     .brand img { height: 34px; }
     .site-nav ul { gap: 16px; }
-    .hero-title { font-size: min(calc((100vw - 40px) / 8.3), 11vw); }
+    .hero-title { font-size: calc((100vw - 2 * var(--pad)) / 9.4); }
     .hero-next .arrow { display: none; }
     .facts, .included dl { grid-template-columns: minmax(0, 1fr); }
     .photo .duotone { margin-inline: calc(-1 * var(--pad)); }
@@ -503,11 +551,15 @@
     .signup { grid-template-columns: minmax(0, 1fr); }
     .footer-nav { grid-column: 1 / span 5; }
     .footer-contact { grid-column: 6 / span 7; }
+    .footer-sign { grid-template-columns: minmax(0, 1fr); }
+    .sign-line { padding-bottom: 0; }
+    .sign-object { height: 280px; }
     .site-nav .nav-apply { padding: 7px 11px; }
   }
   @media (max-width: 380px) {
-    .site-nav ul { gap: 12px; }
-    .site-nav a { font-size: 0.875rem; }
+    .site-nav ul { gap: 11px; }
+    .site-nav a { font-size: 0.8125rem; }
+    .site-nav .nav-apply { padding: 7px 9px; }
     .brand img { height: 30px; }
   }
 </style>
@@ -540,7 +592,7 @@
         <div class="hero-text">
           <h1 id="hero-title" class="hero-title">
             <span class="line"><span class="l" style="--i:0">Where government</span></span>
-            <span class="line"><span class="l it" style="--i:1">meets</span></span>
+            <span class="line"><span class="l" style="--i:1">meets</span></span>
             <span class="line"><span class="l" style="--i:2">entrepreneurship.</span></span>
           </h1>
           <p class="lede">GovLab, short for Governance Lab, is a startup incubator at the Harvard Institute of Politics. In ten weeks, founders take a government-technology company from idea to MVP, go after their first government contracts and private-sector clients, and prepare a first capital raise.</p>
@@ -558,8 +610,8 @@
           </div>
         </div>
       </div>
-      <a class="hero-next" href="#pitch-day">
-        <span class="wrap hero-next-in"><b>Fall 2026 Pitch Day</b><span class="when">Tuesday, December 1 · 6:00–7:30 PM · Malkin Penthouse, Institute of Politics</span><span class="arrow" aria-hidden="true">→</span></span>
+      <a class="hero-next" href="#pitch-day" data-date="2026-12-01">
+        <span class="wrap hero-next-in"><b>Fall 2026 Pitch Day</b><span class="soon" hidden></span><span class="when">Tuesday, December 1 · 6:00–7:30 PM · Malkin Penthouse, Institute of Politics</span><span class="arrow" aria-hidden="true">→</span></span>
       </a>
       <div class="pin-cover" aria-hidden="true"></div>
     </section>
@@ -570,12 +622,20 @@
     <div class="wrap">
       <h2 id="brief-title" class="vh">GovLab in brief</h2>
       <div class="grid outcomes-grid">
-        <p class="statement" data-reveal>GovLab companies have raised <strong style="--i:0">$25M</strong>, from backers including <strong style="--i:1">Y&nbsp;Combinator</strong>, <strong style="--i:2">Andreessen Horowitz</strong>, <strong style="--i:3">Greylock</strong>, <strong style="--i:4">Unusual Ventures</strong>, and <strong style="--i:5">SV&nbsp;Angel</strong>.</p>
+        <div class="raised" data-reveal>
+          <p class="figure">$25M</p>
+          <p class="figure-cap">raised by GovLab companies, from backers including</p>
+          <ul class="backers">
+            <li style="--i:0">Y&nbsp;Combinator</li><li style="--i:1">Andreessen Horowitz</li><li style="--i:2">Greylock</li><li style="--i:3">Unusual Ventures</li><li style="--i:4">SV&nbsp;Angel</li>
+          </ul>
+        </div>
         <dl class="facts" data-reveal>
           <div style="--i:0"><dt>Length</dt><dd>Ten weeks, one semester<span class="meter" aria-hidden="true"><i style="--n:0"></i><i style="--n:1"></i><i style="--n:2"></i><i style="--n:3"></i><i style="--n:4"></i><i style="--n:5"></i><i style="--n:6"></i><i style="--n:7"></i><i style="--n:8"></i><i style="--n:9"></i></span></dd></div>
-          <div style="--i:1"><dt>Format</dt><dd>Weekly workshops with founders, investors, and government officials</dd></div>
-          <div style="--i:2"><dt>Finale</dt><dd><a href="#pitch-day">Pitch Day</a>, judged by investors, government officials, and Harvard faculty</dd></div>
-          <div style="--i:3"><dt>Where</dt><dd>Institute of Politics, Harvard Kennedy School, 79 JFK Street, Cambridge</dd></div>
+          <div style="--i:1"><dt>Cohort</dt><dd>Ten Harvard-based startups</dd></div>
+          <div style="--i:2"><dt>Format</dt><dd>Weekly workshops with founders, investors, and government officials</dd></div>
+          <div style="--i:3"><dt>Finale</dt><dd><a href="#pitch-day">Pitch Day</a>, judged by investors, government officials, and Harvard faculty</dd></div>
+          <div style="--i:4"><dt>Where</dt><dd>Institute of Politics, Harvard Kennedy School, 79 JFK Street, Cambridge</dd></div>
+          <div style="--i:5"><dt>Since</dt><dd>2024, as the Institute of Politics’ sixteenth program</dd></div>
         </dl>
       </div>
 
@@ -631,22 +691,23 @@
       <div class="wrap year-head">
         <h2 id="year-title">2026 at GovLab</h2>
         <p>A spring cohort, then the fall cohort week by week, from its first workshop to Pitch Day.</p>
+        <p class="guests">Guests this fall: <a href="#ev-sep-21">Fed10</a>, <a href="#ev-sep-29">Xfund</a>, <a href="#ev-oct-12">A37</a>, <a href="#ev-oct-19">Civic Roundtable</a>, <a href="#ev-oct-19">Protagonist</a>, and <a href="#ev-nov-16">Longeye</a>.</p>
       </div>
       <div class="year-view">
         <ol class="events">
-          <li class="event" data-date="2026-05-01"><time datetime="2026">Spring</time><span class="kind">Cohort</span><h3>The spring cohort</h3><p>GovLab’s spring 2026 cohort worked through the semester and closed it with Pitch Day.</p></li>
-          <li class="event" data-date="2026-09-21"><time datetime="2026-09-21">Sep 21</time><span class="kind">Workshop</span><h3>Kickoff with Fed10</h3><p>The fall cohort opened with Armand Iorgulescu, CEO of Fed10, on finding real customer pain.</p></li>
-          <li class="event" data-date="2026-09-28"><time datetime="2026-09-28">Sep 28</time><span class="kind">Workshop</span><h3>Customer discovery share-outs</h3><p>Founders presented what they heard in their first customer conversations.</p></li>
-          <li class="event" data-date="2026-09-29"><time datetime="2026-09-29">Sep 29</time><span class="kind">Office hours</span><h3>Feedback from Xfund</h3><p>Every founder met with Xfund’s Prat Mallick for direct feedback on their thesis.</p></li>
-          <li class="event" data-date="2026-10-05"><time datetime="2026-10-05">Oct 5</time><span class="kind">Workshop</span><h3>Pitching Xfund</h3><p>Founders pitched Brandon Farwell, General Partner at Xfund, and got his feedback.</p></li>
-          <li class="event" data-date="2026-10-06"><time datetime="2026-10">Early Oct</time><span class="kind">Launch</span><h3>Request for Startups</h3><p>GovLab’s Request for Startups video went out and passed 2,000 views.</p></li>
-          <li class="event" data-date="2026-10-12"><time datetime="2026-10-12">Oct 12</time><span class="kind">Workshop</span><h3>Brian Zhou of A37</h3><p>GovLab alum Brian Zhou, co-founder of A37, spoke to the cohort.</p></li>
-          <li class="event" data-date="2026-10-19"><time datetime="2026-10-19">Oct 19</time><span class="kind">Demo day</span><h3>MVP Demo Day</h3><p>Founders demoed their MVPs for Madeleine Smith, CEO of Civic Roundtable, and Nick Malone, Principal at Protagonist.</p></li>
-          <li class="event" data-date="2026-10-26"><time datetime="2026-10-26">Oct 26</time><span class="kind">Workshop</span><h3>Progress review</h3><p>Founders reviewed their progress, and workshops moved to a short guest talk followed by co-working.</p></li>
-          <li class="event" data-date="2026-11-02"><time datetime="2026-11-02">Nov 2</time><span class="kind">Announcement</span><h3>Pitch Day set</h3><p>Pitch Day was set for December 1 in the Malkin Penthouse at the Institute of Politics.</p></li>
-          <li class="event" data-date="2026-11-09"><time datetime="2026-11-09">Nov 9</time><span class="kind">Workshop</span><h3>Pitch prep</h3><p>The cohort turned to getting their pitches ready for Pitch Day.</p></li>
-          <li class="event" data-date="2026-11-16"><time datetime="2026-11-16">Nov 16</time><span class="kind">Workshop</span><h3>Product review with Longeye</h3><p>Longeye’s CTO and lead engineer gave feedback on one-minute founder pitches.</p></li>
-          <li class="event" data-date="2026-12-01"><time datetime="2026-12-01">Dec 1</time><span class="kind">Pitch Day</span><h3>Fall 2026 Pitch Day</h3><p>Founders pitch venture capitalists, government officials, and Harvard faculty. 6:00–7:30 PM, Malkin Penthouse.</p></li>
+          <li class="event" id="ev-spring" data-date="2026-05-01"><time datetime="2026">Spring</time><span class="kind">Cohort</span><h3>The spring cohort</h3><p>GovLab’s spring 2026 cohort worked through the semester and closed it with Pitch Day.</p></li>
+          <li class="event" id="ev-sep-21" data-date="2026-09-21"><time datetime="2026-09-21">Sep 21</time><span class="kind">Workshop</span><h3>Kickoff with Fed10</h3><p>The fall cohort opened with Armand Iorgulescu, CEO of Fed10, on finding real customer pain.</p></li>
+          <li class="event" id="ev-sep-28" data-date="2026-09-28"><time datetime="2026-09-28">Sep 28</time><span class="kind">Workshop</span><h3>Customer discovery share-outs</h3><p>Founders presented what they heard in their first customer conversations.</p></li>
+          <li class="event" id="ev-sep-29" data-date="2026-09-29"><time datetime="2026-09-29">Sep 29</time><span class="kind">Office hours</span><h3>Feedback from Xfund</h3><p>Every founder met with Xfund’s Prat Mallick for direct feedback on their thesis.</p></li>
+          <li class="event" id="ev-oct-5" data-date="2026-10-05"><time datetime="2026-10-05">Oct 5</time><span class="kind">Workshop</span><h3>Pitching Xfund</h3><p>Founders pitched Brandon Farwell, General Partner at Xfund, and got his feedback.</p></li>
+          <li class="event" id="ev-rfs" data-date="2026-10-06"><time datetime="2026-10">Early Oct</time><span class="kind">Launch</span><h3>Request for Startups</h3><p>GovLab’s Request for Startups video went out and passed 2,000 views.</p></li>
+          <li class="event" id="ev-oct-12" data-date="2026-10-12"><time datetime="2026-10-12">Oct 12</time><span class="kind">Workshop</span><h3>Brian Zhou of A37</h3><p>GovLab alum Brian Zhou, co-founder of A37, spoke to the cohort.</p></li>
+          <li class="event" id="ev-oct-19" data-date="2026-10-19"><time datetime="2026-10-19">Oct 19</time><span class="kind">Demo day</span><h3>MVP Demo Day</h3><p>Founders demoed their MVPs for Madeleine Smith, CEO of Civic Roundtable, and Nick Malone, Principal at Protagonist.</p></li>
+          <li class="event" id="ev-oct-26" data-date="2026-10-26"><time datetime="2026-10-26">Oct 26</time><span class="kind">Workshop</span><h3>Progress review</h3><p>Founders reviewed their progress, and workshops moved to a short guest talk followed by co-working.</p></li>
+          <li class="event" id="ev-nov-2" data-date="2026-11-02"><time datetime="2026-11-02">Nov 2</time><span class="kind">Announcement</span><h3>Pitch Day set</h3><p>Pitch Day was set for December 1 in the Malkin Penthouse at the Institute of Politics.</p></li>
+          <li class="event" id="ev-nov-9" data-date="2026-11-09"><time datetime="2026-11-09">Nov 9</time><span class="kind">Workshop</span><h3>Pitch prep</h3><p>The cohort turned to getting their pitches ready for Pitch Day.</p></li>
+          <li class="event" id="ev-nov-16" data-date="2026-11-16"><time datetime="2026-11-16">Nov 16</time><span class="kind">Workshop</span><h3>Product review with Longeye</h3><p>Longeye’s CTO and lead engineer gave feedback on one-minute founder pitches.</p></li>
+          <li class="event" id="ev-dec-1" data-date="2026-12-01"><time datetime="2026-12-01">Dec 1</time><span class="kind">Pitch Day</span><h3>Fall 2026 Pitch Day</h3><p>Founders pitch venture capitalists, government officials, and Harvard faculty. 6:00–7:30 PM, Malkin Penthouse.</p></li>
         </ol>
         <span class="crop year-crop" aria-hidden="true"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></span>
       </div>
@@ -661,13 +722,19 @@
       <div class="pitch-top">
         <p class="pitch-kicker">Fall 2026 · GovTech startup competition</p>
         <h2 id="pitch-title">Pitch Day</h2>
-        <div class="board" aria-hidden="true" data-rows="DEC 1ST|PITCH DAY" data-alumni="FED10|DEEPMYST|COOKIELESS|WIPP" title="Flip it again"></div>
+        <div class="board" aria-hidden="true" data-date="2026-12-01" data-rows="DEC 1ST|PITCH DAY" data-alumni="FED10|DEEPMYST|COOKIELESS|WIPP" title="Flip it again"></div>
+        <form class="board-try" autocomplete="off">
+          <label for="board-name">Put your startup on the board</label>
+          <input id="board-name" name="startup" type="text" maxlength="11" placeholder="Your startup" spellcheck="false" autocapitalize="characters" enterkeyhint="done">
+          <p class="vh board-said" aria-live="polite"></p>
+        </form>
+        <p class="alumni">Past GovLab startups include Fed10 (Y&nbsp;Combinator, Winter 2026), DeepMyst, Cookieless, and Wipp.</p>
       </div>
 
       <dl class="pitch-info">
         <div><dt>When</dt><dd>Tuesday, December 1<br>6:00–7:30 PM</dd></div>
         <div><dt>Where</dt><dd>Malkin Penthouse<br>Institute of Politics</dd></div>
-        <div><dt>How it works</dt><dd class="plain">Each founder in the cohort gets three minutes to pitch, then takes questions from the judges.</dd></div>
+        <div><dt>How it works</dt><dd class="plain">Each founder gets three minutes to pitch. Then each judge has about thirty seconds for one follow-up question.<button type="button" class="clock-btn" aria-pressed="false" hidden>Run the three-minute pitch clock</button></dd></div>
       </dl>
 
       <div class="pitch-cols">
@@ -686,6 +753,7 @@
             <li><img src="logos/xfund.png" alt="Xfund" width="40" height="40"></li>
             <li><img src="logos/protagonist.png" alt="Protagonist" width="40" height="40"></li>
           </ul>
+          <p class="lineup-note">Xfund and Protagonist already worked with this fall’s cohort, on <a href="#ev-oct-5">Oct 5</a> and <a href="#ev-oct-19">Oct 19</a>.</p>
         </div>
       </div>
 
@@ -696,14 +764,6 @@
         <p class="pitch-note">Entry is by RSVP, so the Institute of Politics has you on its guest list.</p>
       </div>
 
-      <div class="alumni">
-        <p>Past GovLab startups include Fed10, DeepMyst, Cookieless, and Wipp.</p>
-        <form class="board-try" autocomplete="off">
-          <label for="board-name">Put your startup on the board</label>
-          <input id="board-name" name="startup" type="text" maxlength="11" placeholder="Your startup" spellcheck="false" autocapitalize="characters" enterkeyhint="done">
-          <p class="vh board-said" aria-live="polite"></p>
-        </form>
-      </div>
     </div>
   </section>
 
@@ -712,6 +772,7 @@
     <div class="wrap grid">
       <div class="section-head">
         <h2 id="apply-title">Join the next cohort</h2>
+        <p class="carry" hidden>Up next on the board: <b class="carry-name"></b></p>
         <p>Leave your details and we’ll email you when applications for the next cohort open.</p>
         <p>The same form works if you’d like to join the executive board, speak at a workshop, or get involved as an investor, government official, or tech leader.</p>
         <p>Questions? Email <a href="mailto:govlab@harvardiop.org">govlab@harvardiop.org</a>.</p>
@@ -740,9 +801,13 @@
           <input id="email" name="email" type="email" autocomplete="email" required aria-describedby="email-error">
           <p class="error" id="email-error" hidden></p>
         </div>
-        <div class="field field-wide">
+        <div class="field">
           <label for="school">School or institution <span class="optional">(optional)</span></label>
           <input id="school" name="school" type="text" autocomplete="organization">
+        </div>
+        <div class="field">
+          <label for="startup">Startup or idea <span class="optional">(optional)</span></label>
+          <input id="startup" name="startup" type="text" autocomplete="off">
         </div>
         <div class="form-actions">
           <button class="button ink" type="submit">Keep me posted</button>
@@ -754,6 +819,10 @@
 </main>
 
 <footer class="site-footer dark">
+  <div class="wrap footer-sign">
+    <p class="sign-line">Where government meets entrepreneurship.</p>
+    <div class="sign-object"><canvas class="stipple" aria-hidden="true"></canvas></div>
+  </div>
   <div class="wrap grid">
     <div class="footer-brand">
       <img src="images/logo.png" alt="GovLab" width="101" height="52" loading="lazy">
@@ -780,7 +849,7 @@
   <div class="wrap">
     <div class="footer-base">
       <p>© <span id="year-now">2026</span> GovLab, Harvard Institute of Politics</p>
-      <p>Set in Newsreader and Public Sans, the typeface of the U.S. Web Design System.</p>
+      <p>Set in Besley, after the Clarendon of 1800s American posters, and Public Sans, the U.S. government’s own typeface.</p>
     </div>
   </div>
 </footer>
@@ -1000,6 +1069,10 @@
     const drag = { on: false, x: 0, y: 0, moved: 0 };
     const ptr = { x: -1e4, y: -1e4, in: false };
     const ox = new Float32Array(N), oy = new Float32Array(N), vx = new Float32Array(N), vy = new Float32Array(N);
+    // Where each point landed on screen last frame, and the drawing's bounds without the cursor's push.
+    const sx = new Float32Array(N), sy = new Float32Array(N);
+    const box = { x0: 0, y0: 0, x1: 0, y1: 0 };
+    let fade = 1;
     const bins = Array.from({ length: 12 }, () => ({ n: 0, d: new Float32Array(N * 3) }));
     const ALPHA = [0.16, 0.3, 0.46, 0.62, 0.8, 1];
 
@@ -1047,6 +1120,7 @@
       const cyw = Math.cos(yaw), syw = Math.sin(yaw), cp = Math.cos(pitch), sp = Math.sin(pitch);
       const S = Math.min(W, H) * scale, D = 7, cx = W / 2, cy = H * 0.5, R2 = reach * reach;
       for (const b of bins) b.n = 0;
+      let x0 = Infinity, y0 = Infinity, x1b = -Infinity, y1b = -Infinity;
       for (let i = 0; i < N; i++) {
         const i3 = i * 3;
         const x = cur[i3], y = cur[i3 + 1] - lift, z = cur[i3 + 2];
@@ -1054,6 +1128,7 @@
         const y1 = y * cp - z1 * sp, z2 = y * sp + z1 * cp;
         const f = D / (D - z2);
         let px = cx + x1 * f * S, py = cy - y1 * f * S;
+        if (px < x0) x0 = px; if (px > x1b) x1b = px; if (py < y0) y0 = py; if (py > y1b) y1b = py;
         if (motion) {
           if (ptr.in && !drag.on) {
             const dx = px + ox[i] - ptr.x, dy = py + oy[i] - ptr.y, d2 = dx * dx + dy * dy;
@@ -1063,6 +1138,7 @@
           ox[i] += vx[i]; oy[i] += vy[i];
           px += ox[i]; py += oy[i];
         }
+        sx[i] = px; sy[i] = py;
         const depth = clamp((z2 + 1.5) / 3);
         const level = Math.min(5, Math.floor(depth * 6));
         const bin = bins[(curRed[i] > 0.5 ? 6 : 0) + level];
@@ -1070,14 +1146,18 @@
         const k = bin.n * 3;
         bin.d[k] = px; bin.d[k + 1] = py; bin.d[k + 2] = s; bin.n++;
       }
+      box.x0 = x0; box.y0 = y0; box.x1 = x1b; box.y1 = y1b;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
+      if (fade <= 0.002) return;
+      ctx.globalAlpha = fade;
       bins.forEach((b, bi) => {
         if (!b.n) return;
         const red = bi >= 6, a = ALPHA[bi % 6];
         ctx.fillStyle = red ? `rgba(${accent},${a})` : `rgba(${ink},${a})`;
         for (let j = 0; j < b.n; j++) { const k = j * 3, s = b.d[k + 2]; ctx.fillRect(b.d[k] - s / 2, b.d[k + 1] - s / 2, s, s); }
       });
+      ctx.globalAlpha = 1;
     };
 
     measure();
@@ -1094,6 +1174,11 @@
       draw,
       get m() { return m; },
       set m(v) { m = v; },
+      get fade() { return fade; },
+      // Skip the drawing's own entrance, for when the swarm brings its dots in instead.
+      finishIntro: () => { introDone = true; waiting = false; if (born < 0) born = 0; },
+      set fade(v) { fade = v; },
+      canvas, N, sx, sy, red: curRed, box,
       measure: () => { measure(); if (!motion) draw(0); },
     };
   }
@@ -1158,7 +1243,8 @@
     buttons.dome.addEventListener('click', () => choose('dome'));
     buttons.flask.addEventListener('click', () => choose('flask'));
     return {
-      el: wrap, active: true, measure: engine.measure,
+      el: wrap, active: true, measure: engine.measure, engine, scene, panel,
+      get pinned() { return pinned; },
       update(dt) { if (!(pinned && pinState(scene, panel).cover >= 1)) engine.draw(dt); },
     };
   }
@@ -1217,7 +1303,8 @@
       onTap: () => go((shown + 1) % items.length),
     });
     return {
-      el: wrap, active: true, measure: engine.measure,
+      el: wrap, active: true, measure: engine.measure, engine, section, panel,
+      get pinned() { return pinned; },
       update(dt) {
         if (pinned) {
           const { p, cover } = pinState(section, panel);
@@ -1266,6 +1353,7 @@
     }
 
     let pinned = false, max = 0, step = 1, shown = -1;
+    const crop = section.querySelector('.year-crop');
     const measure = () => {
       pinned = isPinned(panel);
       list.style.transform = '';
@@ -1276,14 +1364,63 @@
     };
     measure();
     window.addEventListener('resize', measure);
+
+    // Links to a week (the guest list, the Pitch Day lineup) scroll the rail to that card and flash it.
+    const flash = (li) => { li.classList.remove('is-flash'); void li.offsetWidth; li.classList.add('is-flash'); };
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a[href^="#ev-"]');
+      if (!a) return;
+      const li = document.getElementById(a.hash.slice(1));
+      const k = items.indexOf(li);
+      if (k < 0 || !pinned) { if (li) setTimeout(() => flash(li), 500); return; }
+      e.preventDefault();
+      const active = section.offsetHeight - 2 * panel.offsetHeight;
+      const top = section.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: top + active * (k / Math.max(1, items.length - 1)), behavior: 'smooth' });
+      history.replaceState(null, '', a.hash);
+      setTimeout(() => flash(li), 700);
+    });
+
+    // At the end of the year, the Dec 1 card fills with navy from the bottom, the way the sign-up
+    // buttons do, then grows to fill the screen as the Pitch Day scene rises in. It stands in for
+    // the shade the other scenes get.
+    const wipe = document.createElement('div');
+    wipe.className = 'year-wipe';
+    wipe.setAttribute('aria-hidden', 'true');
+    panel.appendChild(wipe);
+    let wipeOn = false, wipeBox = null;
+
+    let progress = 0;
     return {
       el: section, active: true, measure,
+      get wipe() { return wipeBox; },
+      get progress() { return progress; },
+      get axisLine() { return axis && axis.querySelector('.line'); },
       update() {
-        if (!pinned) return;
-        const { p } = pinState(section, panel);
-        const x = p * max;
+        if (!pinned) { if (wipeOn) { wipe.style.visibility = 'hidden'; wipeOn = false; wipeBox = null; } return; }
+        const { p, cover } = pinState(section, panel);
+        // Each card holds in the frame for a moment, then the rail glides on to the next.
+        const u = p * (items.length - 1), whole = Math.min(items.length - 1, Math.floor(u));
+        const x = step * (whole + easeInOut(clamp((u - whole - 0.28) / 0.72)));
         list.style.transform = `translate3d(${(-x).toFixed(1)}px, 0, 0)`;
-        if (axis) axis.style.setProperty('--p', p.toFixed(4));
+        progress = x / (max || 1);
+        if (axis) axis.style.setProperty('--p', progress.toFixed(4));
+
+        const e = clamp(cover / 0.42);
+        if (e > 0 && crop) {
+          const fill = smooth(e / 0.3), k = easeInOut(clamp((e - 0.3) / 0.7));
+          const pr = panel.getBoundingClientRect(), cr = crop.getBoundingClientRect();
+          const W = pr.width, H = pr.height;
+          // insets from each side of the panel: the card's, shrinking to nothing as it grows
+          const l = (cr.left - pr.left) * (1 - k), r = (pr.right - cr.right) * (1 - k), b = (pr.bottom - cr.bottom) * (1 - k);
+          const top = (cr.top - pr.top) * (1 - k), level = lerp(cr.bottom - pr.top, cr.top - pr.top, fill) * (1 - k);
+          wipe.style.clipPath = `inset(${level.toFixed(1)}px ${r.toFixed(1)}px ${b.toFixed(1)}px ${l.toFixed(1)}px)`;
+          if (!wipeOn) { wipe.style.visibility = 'visible'; wipeOn = true; }
+          wipeBox = { left: pr.left + l, top: pr.top + top, right: pr.left + W - r, bottom: pr.top + H - b, k, fill, cover };
+        } else if (wipeOn) {
+          wipe.style.visibility = 'hidden'; wipeOn = false; wipeBox = null;
+        }
+
         const k = clamp(Math.round(x / step), 0, items.length - 1);
         if (k === shown) return;
         shown = k;
@@ -1293,12 +1430,720 @@
     };
   }
 
+  // The footer closes the loop: the flask turns back into the dome as you reach the bottom.
+  function bookendObject(footer) {
+    const box = footer && footer.querySelector('.sign-object');
+    if (!box) return null;
+    let range = 1;
+    const progress = () => {
+      const r = footer.getBoundingClientRect();
+      return clamp((window.innerHeight - r.top) / range);
+    };
+    const engine = stippleEngine(box.querySelector('.stipple'), {
+      N: window.innerWidth < 700 ? 900 : 1300,
+      shapes: [domePoints(), flaskPoints()],
+      ink: CREAM, accent: GOLD, scale: 0.27, lift: -0.1, follow: 0.02, introOnView: true,
+      goal: () => 1 - smooth(progress()),
+      onMeasure: () => { range = Math.max(200, footer.offsetHeight * 0.85); },
+    });
+    if (motion) engine.m = 1;
+    return { el: box, active: true, measure: engine.measure, engine, update(dt) { engine.draw(dt); } };
+  }
+
   // Each pinned scene darkens a little as the next one slides over it.
-  const shades = [...document.querySelectorAll('.hero-wrap, .program, .year')].map((wrap) => {
+  const shades = [...document.querySelectorAll('.hero-wrap, .program')].map((wrap) => {
     const panel = wrap.querySelector('.hero, .rail-pin');
     return { wrap, panel, shade: panel && panel.querySelector('.pin-cover'), pinned: false, last: '' };
   }).filter((s) => s.panel && s.shade);
   const measureShades = () => shades.forEach((s) => { s.pinned = isPinned(s.panel); if (!s.pinned) { s.shade.style.opacity = ''; s.last = ''; } });
+
+  /* =========================================================================
+     The viewfinder: one set of crop marks that travels the whole page. It
+     settles on whatever each scene is about (the drawing, the figure, the
+     card in focus, the board) and glides to the next subject as you scroll.
+     ========================================================================= */
+  function viewfinder(targets) {
+    const el = document.createElement('div');
+    el.className = 'finder is-off';
+    el.setAttribute('aria-hidden', 'true');
+    el.innerHTML = '<i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i>';
+    document.body.appendChild(el);
+    const [tl, tr, bl, br] = el.children;
+    const C = 22;                      // corner size, the same as the printed crop marks
+    const GLIDE = 0.8;                 // seconds to travel between subjects
+    const scenes = [...document.querySelectorAll('main > .scene, body > .site-footer')];
+    targets = targets.filter((t) => t && t.el);
+    targets.forEach((t) => { t.k = scenes.findIndex((s) => s.contains(t.el)); });
+    root.classList.add('has-finder');
+
+    let cur = null, from = null, t0 = 0, shown = false, light = null;
+    const frame = { x: 0, y: 0, w: 0, h: 0 };
+    const place = ({ x, y, w, h }) => {
+      tl.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+      tr.style.transform = `translate3d(${(x + w - C).toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+      bl.style.transform = `translate3d(${x.toFixed(1)}px, ${(y + h - C).toFixed(1)}px, 0)`;
+      br.style.transform = `translate3d(${(x + w - C).toFixed(1)}px, ${(y + h - C).toFixed(1)}px, 0)`;
+    };
+    const boxOf = (t) => {
+      const r = t.rect();
+      if (!r || !(r.right - r.left > 4) || !(r.bottom - r.top > 4)) return null;
+      const p = t.pad || 0;
+      return { x: r.left - p, y: r.top - p, w: r.right - r.left + 2 * p, h: r.bottom - r.top + 2 * p };
+    };
+    // A subject is hidden once a later scene has slid over most of it.
+    const covered = (t, b, rects) => {
+      const cy = b.y + b.h * 0.7;
+      for (let j = t.k + 1; j < rects.length; j++) if (rects[j].top < cy && rects[j].bottom > cy) return true;
+      return false;
+    };
+
+    return {
+      el: null, active: true,
+      update(dt, now) {
+        const vh = window.innerHeight, focal = vh * 0.46;
+        const rects = scenes.map((s) => s.getBoundingClientRect());
+        let best = null, bestD = Infinity, curD = Infinity, curBox = null;
+        for (const t of targets) {
+          if (t.when && !t.when()) continue;
+          const b = boxOf(t);
+          if (!b) continue;
+          if (t === cur) curBox = b;
+          if (!t.lead) {
+            if (b.y + b.h < vh * 0.14 || b.y > vh * 0.86) continue;
+            if (covered(t, b, rects)) continue;
+          }
+          const d = t.lead ? -1 : Math.abs(b.y + b.h / 2 - focal);
+          if (t === cur) curD = d;
+          if (d < bestD) { best = t; bestD = d; t.box = b; }
+        }
+        // Switch when the current subject is gone, or another is clearly closer to the middle.
+        if (best && best !== cur && (best.lead || curD === Infinity || bestD < curD - 56)) {
+          const b = best.box;
+          // Glide from where the frame is; if it was hidden, close in from a little wider.
+          from = shown ? { ...frame } : { x: b.x - 40, y: b.y - 40, w: b.w + 80, h: b.h + 80 };
+          t0 = now; cur = best; curBox = b; curD = bestD;
+        }
+        const visible = Boolean(cur && curBox && curD !== Infinity);
+        if (visible !== shown) { shown = visible; el.classList.toggle('is-off', !visible); }
+        if (!cur || !curBox) return;
+        if (light !== Boolean(cur.light)) { light = Boolean(cur.light); el.classList.toggle('on-light', light); }
+        const e = from ? easeInOut(clamp((now - t0) / GLIDE)) : 1;
+        if (e >= 1) from = null;
+        frame.x = from ? lerp(from.x, curBox.x, e) : curBox.x;
+        frame.y = from ? lerp(from.y, curBox.y, e) : curBox.y;
+        frame.w = from ? lerp(from.w, curBox.w, e) : curBox.w;
+        frame.h = from ? lerp(from.h, curBox.h, e) : curBox.h;
+        place(frame);
+      },
+    };
+  }
+
+  // Helpers for the viewfinder's subjects.
+  const rectOf = (node) => () => node.getBoundingClientRect();
+  const textRect = (node) => {
+    const range = document.createRange();
+    return () => { range.selectNodeContents(node); return range.getBoundingClientRect(); };
+  };
+  // A stipple drawing's own outline, rather than its canvas.
+  const drawingRect = (engine) => () => {
+    const r = engine.canvas.getBoundingClientRect(), b = engine.box;
+    if (!(b.x1 > b.x0)) return null;
+    return { left: r.left + b.x0, top: r.top + b.y0, right: r.left + b.x1, bottom: r.top + b.y1 };
+  };
+
+  /* =========================================================================
+     The pour: while the record slides up over the hero, the flask's dots
+     stream out of its mouth and settle into the $25M figure, then hand over
+     to the type. It's tied to the scroll, so it runs backwards too.
+     ========================================================================= */
+  // Set a line of type on a scratch canvas, letter by letter where the page put each letter, and
+  // keep n points from inside the glyphs, ordered left to right, relative to the text's box.
+  const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  function glyphPoints(el, n) {
+    const node = [...el.childNodes].find((nd) => nd.nodeType === 3 && nd.nodeValue.trim());
+    if (!node) return null;
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    const box = range.getBoundingClientRect();
+    const w = Math.ceil(box.width) + 8, h = Math.ceil(box.height) + 8;
+    if (w < 20 || h < 20) return null;
+    const scratch = document.createElement('canvas');
+    scratch.width = w; scratch.height = h;
+    const c = scratch.getContext('2d', { willReadFrequently: true });
+    const cs = getComputedStyle(el);
+    c.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+    c.textBaseline = 'alphabetic';
+    const text = node.nodeValue;
+    for (let i = 0; i < text.length; i++) {
+      if (!text[i].trim()) continue;
+      range.setStart(node, i); range.setEnd(node, i + 1);
+      const r = range.getBoundingClientRect();
+      const m = c.measureText(text[i]);
+      const ascent = m.fontBoundingBoxAscent || parseFloat(cs.fontSize) * 0.9;
+      c.fillText(text[i], r.left - box.left + 4, r.top - box.top + ascent + 4);
+    }
+    const data = c.getImageData(0, 0, w, h).data;
+    const pts = [];
+    for (let y = 0; y < h; y += 2) for (let x = 0; x < w; x += 2) if (data[(y * w + x) * 4 + 3] > 150) pts.push([x - 4 + Math.random() * 2, y - 4 + Math.random() * 2]);
+    if (pts.length < 60) return null;
+    shuffle(pts);
+    const chosen = Array.from({ length: n }, (_, i) => pts[i % pts.length]).sort((a, b) => a[0] - b[0]);
+    const gx = new Float32Array(n), gy = new Float32Array(n);
+    chosen.forEach(([x, y], i) => { gx[i] = x; gy[i] = y; });
+    return { gx, gy };
+  }
+
+  function pourObject(hero, outcomes) {
+    const fig = outcomes && outcomes.querySelector('.figure');
+    const raised = fig && fig.closest('.raised');
+    if (!motion || !hero || !hero.engine || !fig) return null;
+    const node = [...fig.childNodes].find((nd) => nd.nodeType === 3 && nd.nodeValue.trim());
+    if (!node) return null;
+
+    const canvas = document.createElement('canvas');
+    canvas.className = 'pour';
+    canvas.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    const eng = hero.engine;
+    const n = Math.min(eng.N, window.innerWidth < 1200 ? 1100 : 1500);
+    const pick = new Uint16Array(n), delay = new Float32Array(n);
+    const gx = new Float32Array(n), gy = new Float32Array(n);   // landing spot, inside the figure's text box
+    const kx = new Float32Array(n), ky = new Float32Array(n);   // how each path bends above the mouth
+    const out = new Float32Array(n * 4 * 3);   // up to n points in each of the four inks
+    const counts = [0, 0, 0, 0];
+    const INKS = ['244,240,232', '214,190,140', '24,36,65', '110,90,44'];   // cream, gold on navy; navy, deep gold on paper
+    const range = document.createRange();
+    let W = 1, H = 1, dpr = 1, enabled = false, sampled = false, assigned = false, state = -1;
+
+    const textBox = () => { range.selectNodeContents(fig); return range.getBoundingClientRect(); };
+    const sample = () => {
+      const g = glyphPoints(fig, n);
+      if (!g) return false;
+      gx.set(g.gx); gy.set(g.gy);
+      return true;
+    };
+
+    // The points nearest the top of the flask leave first, and land on the left of the figure.
+    const assign = () => {
+      const idx = shuffle(Array.from({ length: eng.N }, (_, i) => i)).slice(0, n).sort((a, b) => eng.sy[a] - eng.sy[b]);
+      idx.forEach((p, i) => {
+        pick[i] = p;
+        delay[i] = (i / n) * 0.5 + Math.random() * 0.06;
+        kx[i] = rand(-60, 60); ky[i] = rand(50, 170);
+      });
+      assigned = true;
+    };
+
+    const measure = () => {
+      enabled = Boolean(hero.pinned);
+      W = window.innerWidth; H = window.innerHeight; dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+      raised.classList.toggle('poured', enabled);
+      if (!enabled) { canvas.style.visibility = 'hidden'; fig.style.opacity = ''; eng.fade = 1; state = -1; return; }
+      sampled = sample();
+      state = -1;
+    };
+
+    const rest = (s) => {
+      if (state === s) return;
+      state = s;
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.style.visibility = 'hidden';
+      eng.fade = s === 0 ? 1 : 0;
+      fig.style.opacity = s === 0 ? '0' : '1';
+    };
+
+    const update = () => {
+      if (!enabled) return;
+      const { cover } = pinState(hero.scene, hero.panel);
+      const t = clamp((cover - 0.03) / 0.85);
+      if (cover <= 0 || !sampled) return rest(0);
+      if (t >= 1) return rest(2);
+      if (state !== 1) { state = 1; canvas.style.visibility = 'visible'; if (!assigned) assign(); }
+
+      eng.fade = 1 - smooth(t / 0.4);
+      fig.style.opacity = smooth((t - 0.84) / 0.14).toFixed(3);
+      const tb = textBox(), hr = eng.canvas.getBoundingClientRect(), hb = eng.box;
+      const mx = hr.left + (hb.x0 + hb.x1) / 2, my = hr.top + hb.y0 + (hb.y1 - hb.y0) * 0.22;   // the flask's mouth
+      const edge = outcomes.getBoundingClientRect().top;
+      counts.fill(0);
+      const per = n;
+      for (let i = 0; i < n; i++) {
+        const p = pick[i];
+        const sx = hr.left + eng.sx[p], sy = hr.top + eng.sy[p];
+        const ex = tb.left + gx[i], ey = tb.top + gy[i];
+        const q = easeInOut(clamp((t - delay[i]) / 0.42)), u = 1 - q;
+        const cx = mx + kx[i], cy = my - ky[i];
+        const x = u * u * sx + 2 * u * q * cx + q * q * ex;
+        const y = u * u * sy + 2 * u * q * cy + q * q * ey;
+        // Under the paper, a dot shows only once it's on its way down to the figure; the rest of
+        // the flask stays hidden beneath the page, like the drawing it came from.
+        if (y >= edge && q < 0.35) continue;
+        const b = (y < edge ? 0 : 2) + (eng.red[p] > 0.5 ? 1 : 0);
+        const k = (b * per + counts[b]) * 3;
+        if (counts[b] < per) { out[k] = x; out[k + 1] = y; out[k + 2] = 1.5 + 0.8 * q; counts[b]++; }
+      }
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      ctx.globalAlpha = 1 - smooth((t - 0.88) / 0.12);
+      for (let b = 0; b < 4; b++) {
+        if (!counts[b]) continue;
+        ctx.fillStyle = `rgb(${INKS[b]})`;
+        for (let j = 0; j < counts[b]; j++) { const k = (b * per + j) * 3, s = out[k + 2]; ctx.fillRect(out[k] - s / 2, out[k + 1] - s / 2, s, s); }
+      }
+      ctx.globalAlpha = 1;
+    };
+
+    measure();
+    window.addEventListener('resize', measure);
+    return { el: null, active: true, measure, update };
+  }
+
+  /* =========================================================================
+     The swarm. Once the dots have poured into $25M they don't stay put: as
+     you scroll on, they lift off the figure like a flock of starlings and
+     follow you down the page, streaming around the type, the photo, and the
+     cards the way water runs around stones, looking for open sky. At each
+     drawing they settle into its shape (the program's four objects, a trail
+     along the year, the Pitch Day board) until they become the dome again in
+     the footer. Scroll back up and they fly back the way they came.
+     ========================================================================= */
+  function swarmObject({ fig, stages, year, board, bookend }) {
+    if (!motion || !fig) return null;
+    const small = window.innerWidth < 700;
+    const N = small ? 700 : 1500;
+    const canvas = document.createElement('canvas');
+    canvas.className = 'swarm';
+    canvas.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+
+    // Each dot: where it is, how fast it's going, where it's headed, and a few traits of its own.
+    const x = new Float32Array(N), y = new Float32Array(N), vx = new Float32Array(N), vy = new Float32Array(N);
+    const tx = new Float32Array(N), ty = new Float32Array(N), al = new Float32Array(N);
+    const ptx = new Float32Array(N), pty = new Float32Array(N), since = new Float32Array(N);
+    const stiff = new Float32Array(N), lag = new Float32Array(N), gold = new Uint8Array(N);
+    const su = new Float32Array(N), sv = new Float32Array(N), sw = new Float32Array(N), ph = new Float32Array(N), room = new Float32Array(N);
+    const at = new Int8Array(N).fill(-2), landed = new Uint8Array(N), rejoin = new Uint8Array(N);
+    for (let i = 0; i < N; i++) {
+      room[i] = rand(8, 34);
+      stiff[i] = rand(0.65, 1.35); lag[i] = Math.random() * 0.3; gold[i] = Math.random() < 0.09 ? 1 : 0;
+      const r = Math.pow(Math.random(), 0.55), a = rand(0, TAU), u = Math.random() * 2 - 1, s = Math.sqrt(1 - u * u);
+      su[i] = r * s * Math.cos(a); sv[i] = r * u; sw[i] = r * s * Math.sin(a); ph[i] = rand(0, TAU);
+    }
+
+    const range = document.createRange();
+    const mid = (r) => (r.top + r.bottom) / 2 / window.innerHeight;
+    const stations = [];
+
+    // 0. $25M, where the pour left them. Sitting on the type, they're invisible; the type shows.
+    let glyph = null;
+    const figBox = () => { range.selectNodeContents(fig); return range.getBoundingClientRect(); };
+    stations.push({
+      name: 'figure', hidden: true,
+      weight: () => 1 - smooth((0.16 - mid(figBox())) / 0.26),   // they lift off as the figure goes under the header
+      prep() { this.r = figBox(); },
+      target(i) { tx[i] = this.r.left + glyph.gx[i]; ty[i] = this.r.top + glyph.gy[i]; },
+    });
+
+    // A stipple drawing: each dot takes one of its points, and the drawing itself fades in once
+    // most of the dots have landed (and out again as they leave).
+    const drawingStation = (name, eng, weight, cover) => {
+      const map = new Uint16Array(N);
+      const order = Array.from({ length: eng.N }, (_, k) => k);
+      for (let k = order.length - 1; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [order[k], order[j]] = [order[j], order[k]]; }
+      for (let i = 0; i < N; i++) map[i] = order[i % eng.N];
+      eng.finishIntro();
+      eng.fade = 0;
+      return {
+        name, eng, hidden: true, weight,
+        prep() { this.r = eng.canvas.getBoundingClientRect(); this.edge = cover ? cover() : Infinity; },
+        target(i) { const p = map[i]; tx[i] = this.r.left + eng.sx[p]; ty[i] = this.r.top + eng.sy[p]; },
+      };
+    };
+
+    // 1. The program's four objects. Where the year has slid over them, their dots stay hidden.
+    if (stages && stages.engine) {
+      const over = document.querySelector('.year');
+      stations.push(drawingStation('stages', stages.engine, () => {
+        const r = stages.engine.canvas.getBoundingClientRect();
+        if (!r.height) return 0;
+        const arrive = smooth((0.9 - mid(r)) / 0.4);
+        const leave = stages.pinned ? smooth((pinState(stages.section, stages.panel).cover - 0.2) / 0.3) : smooth((0.3 - mid(r)) / 0.26);
+        return arrive * (1 - leave);
+      }, () => (over && stages.pinned ? over.getBoundingClientRect().top : Infinity)));
+    }
+
+    // 2. The year: a trail along the axis up to the current week, with a knot circling the week itself.
+    const axisLine = year && year.axisLine;
+    if (axisLine) {
+      stations.push({
+        name: 'year', hidden: false,
+        weight() {
+          const r = axisLine.getBoundingClientRect();
+          if (!r.width) return 0;
+          const leave = year.wipe ? smooth((year.wipe.cover - 0.01) / 0.22) : 0;
+          return smooth((1.4 - mid(r)) / 0.4) * (1 - leave);
+        },
+        prep(t) { this.r = axisLine.getBoundingClientRect(); this.p = year.progress || 0; this.t = t; },
+        target(i) {
+          const head = this.r.left + this.r.width * this.p, cy = this.r.top + this.r.height / 2;
+          if (i % 5 < 2) {
+            const a = ph[i] + this.t * (1.1 + su[i] * 0.7), rr = 9 + 20 * Math.abs(sv[i]);
+            tx[i] = head + Math.cos(a) * rr; ty[i] = cy + Math.sin(a) * rr * 0.6;
+          } else {
+            const f = Math.pow((su[i] + 1) / 2, 1.6);
+            tx[i] = head - this.r.width * this.p * f; ty[i] = cy - 7 + sv[i] * 4;
+          }
+        },
+      });
+    }
+
+    // 3. The Pitch Day board: the flock dives in and disappears into the flaps.
+    if (board) {
+      stations.push({
+        name: 'board', absorb: 70,
+        weight() {
+          const r = board.getBoundingClientRect();
+          if (!r.width) return 0;
+          const m = mid(r);
+          return smooth((0.95 - m) / 0.32) * (1 - smooth((0.3 - m) / 0.24));
+        },
+        prep() { this.r = board.getBoundingClientRect(); },
+        target(i) { tx[i] = this.r.left + this.r.width * (su[i] * 0.5 + 0.5); ty[i] = this.r.top + this.r.height * (sw[i] * 0.5 + 0.5); },
+      });
+    }
+
+    // 4. The footer: the dome again.
+    if (bookend && bookend.engine) {
+      stations.push(drawingStation('footer', bookend.engine, () => {
+        const r = bookend.engine.canvas.getBoundingClientRect();
+        return r.height ? smooth((1.02 - mid(r)) / 0.36) : 0;
+      }));
+    }
+
+    // --- What the flock flows around: the page's type, pictures, cards, and fields ---
+    const SOLID = [
+      'main h1', 'main h2', 'main h3', 'main p', 'main dl > div', 'main .stages li', 'main .event', 'main img',
+      'main .board', 'main .board-try input', 'main .field', 'main .role', 'main .button', 'main .pills li',
+      'main .stage-frame .frame', 'main .hero-object', 'main .object-bar', 'main .clock-btn',
+      '.site-footer .sign-line', '.site-footer .sign-object', '.site-footer .footer-brand', '.site-footer .footer-nav',
+      '.site-footer .footer-contact', '.site-footer .footer-base',
+    ].join(',');
+    let solids = [];
+    const collect = () => {
+      const all = [...document.querySelectorAll(SOLID)].filter((el) => !el.closest('.vh') && !el.classList.contains('vh'));
+      solids = all.filter((el) => !all.some((o) => o !== el && o.contains(el)));   // the outermost of nested ones
+    };
+    const MAXO = 160, PAD = 4, MARGIN = 34;
+    const oL = new Float32Array(MAXO), oT = new Float32Array(MAXO), oR = new Float32Array(MAXO), oB = new Float32Array(MAXO);
+    let oN = 0;
+    const gather = () => {
+      oN = 0;
+      for (const el of solids) {
+        const r = el.getBoundingClientRect();
+        if (r.width < 2 || r.bottom < -MARGIN || r.top > H + MARGIN || r.right < 0 || r.left > W) continue;
+        oL[oN] = r.left - PAD; oT[oN] = r.top - PAD; oR[oN] = r.right + PAD; oB[oN] = r.bottom + PAD;
+        if (++oN >= MAXO) break;
+      }
+    };
+    // Steer a dot around whatever it's about to fly into: push it out along the nearest side and
+    // trade the part of its speed that heads in for speed along the side, so it streams around.
+    // If the page has slid something over it, it drifts out gently, scattering rather than lining up.
+    const inside = new Uint8Array(N), near = new Float32Array(N);
+    const avoid = (i, push, dt, skipX, skipY) => {
+      const px = x[i], py = y[i];
+      inside[i] = 0; near[i] = 0;
+      // On a phone the type runs nearly edge to edge, so there's nowhere to steer around it:
+      // the birds fly straight over and simply go faint while they're over words.
+      if (small) {
+        for (let k = 0; k < oN; k++) if (px > oL[k] && px < oR[k] && py > oT[k] && py < oB[k]) { inside[i] = 1; break; }
+        return;
+      }
+      for (let k = 0; k < oN; k++) {
+        if (py < oT[k] - MARGIN || py > oB[k] + MARGIN || px < oL[k] - MARGIN || px > oR[k] + MARGIN) continue;
+        if (skipX > oL[k] && skipX < oR[k] && skipY > oT[k] && skipY < oB[k]) continue;   // its own landing spot
+        const dl = px - oL[k], dr = oR[k] - px, dtp = py - oT[k], db = oB[k] - py;
+        let d, nx, ny;
+        if (dl > 0 && dr > 0 && dtp > 0 && db > 0) {
+          inside[i] = 1;
+          const m = Math.min(dl, dr, dtp, db);
+          if (m === dl) { nx = -1; ny = 0; } else if (m === dr) { nx = 1; ny = 0; } else if (m === dtp) { nx = 0; ny = -1; } else { nx = 0; ny = 1; }
+          const f = push * 0.16 * dt, side = (ph[i] - Math.PI) / Math.PI;
+          vx[i] += (nx - ny * side) * f; vy[i] += (ny + nx * side) * f;
+          continue;
+        } else {
+          const ex = dl < 0 ? dl : dr < 0 ? -dr : 0, ey = dtp < 0 ? dtp : db < 0 ? -db : 0;
+          d = Math.hypot(ex, ey);
+          if (d > MARGIN || d === 0) continue;
+          nx = ex / d; ny = ey / d;
+        }
+        if (d > room[i]) continue;
+        const k1 = (room[i] - d) / room[i];
+        if (k1 > near[i]) near[i] = k1;
+        const f = k1 * push * dt;
+        vx[i] += nx * f; vy[i] += ny * f;
+        const vn = vx[i] * nx + vy[i] * ny;
+        if (vn < 0) { const g = Math.min(1, k1) * 0.85; vx[i] -= vn * nx * g; vy[i] -= vn * ny * g; }
+      }
+    };
+
+    // What's behind each dot, so it can be cream on navy and navy on paper. Later scenes cover
+    // earlier ones; the photo and the growing Pitch Day card count as dark.
+    const scenes = [...document.querySelectorAll('main > .scene, body > .site-footer')].map((el) => ({
+      el, dark: el.classList.contains('dark') || Boolean(el.querySelector(':scope > .dark')) || el.classList.contains('hero-wrap'),
+    }));
+    const photo = document.querySelector('.photo .duotone');
+    const ROW = 6;
+    let rows = new Uint8Array(1);
+    const shade = () => {
+      const n = Math.ceil(H / ROW) + 1;
+      if (rows.length !== n) rows = new Uint8Array(n);
+      const rects = scenes.map((s) => s.el.getBoundingClientRect());
+      for (let k = 0; k < n; k++) {
+        const yy = k * ROW + ROW / 2;
+        let dark = 1;
+        for (let j = rects.length - 1; j >= 0; j--) if (rects[j].top <= yy && rects[j].bottom > yy) { dark = scenes[j].dark ? 1 : 0; break; }
+        rows[k] = dark;
+      }
+    };
+
+    // --- the flow the flock rides: a slowly turning field with no sources or sinks, so the
+    // birds swirl and stream rather than bunch up ---
+    const WAVES = [[1 / 210, 1 / 330, 0.31, 0, 1], [-1 / 270, 1 / 190, -0.23, 2.1, 0.8], [1 / 150, -1 / 240, 0.41, 4.2, 0.55], [1 / 380, 1 / 120, -0.17, 1.3, 0.4]];
+    WAVES.forEach((w) => { const k = Math.hypot(w[0], w[1]); w.push(w[1] / k, -w[0] / k); });
+    const WSUM = WAVES.reduce((s, w) => s + w[4], 0);
+    // finer eddies, for the churn inside the flock
+    const EDDIES = [[1 / 55, 1 / 80, 0.9, 0.7, 1], [-1 / 70, 1 / 50, -0.7, 2.9, 0.8], [1 / 90, -1 / 45, 1.1, 5.1, 0.6]];
+    EDDIES.forEach((w) => { const k = Math.hypot(w[0], w[1]); w.push(w[1] / k, -w[0] / k); });
+    const ESUM = EDDIES.reduce((s, w) => s + w[4], 0);
+
+    let W = 1, H = 1, dpr = 1, first = true;
+    let ax = 0, ay = 0, avx = 0, avy = 0, homeX = 0, homeY = 0, lastPick = -10;
+    let lastY = window.scrollY, scrollV = 0, lastScroll = -10, rushing = false, lastRush = -10;
+    window.addEventListener('scroll', () => { lastScroll = performance.now() / 1000; }, { passive: true });
+    const mouse = { x: -1e4, y: -1e4 };
+    window.addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse') { mouse.x = e.clientX; mouse.y = e.clientY; } }, { passive: true });
+    document.documentElement.addEventListener('pointerleave', () => { mouse.x = mouse.y = -1e4; });
+    let resample = 0;
+    const size = () => {
+      W = window.innerWidth; H = window.innerHeight; dpr = Math.min(2, window.devicePixelRatio || 1);
+      canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+    };
+    const measure = () => { size(); glyph = glyphPoints(fig, N) || glyph; collect(); };
+    measure();
+    window.addEventListener('resize', () => {
+      size();
+      clearTimeout(resample);
+      resample = setTimeout(() => { glyph = glyphPoints(fig, N) || glyph; collect(); }, 220);
+    });
+    if (!glyph) { canvas.remove(); return null; }
+
+    // Find open sky for the flock: of a few spots in the lower part of the screen, the one with
+    // the least on it, with a little loyalty to where it already is.
+    const pickHome = (R) => {
+      let best = Infinity, bx = homeX, by = homeY;
+      const xs = small ? [0.3, 0.5, 0.7] : [0.14, 0.32, 0.5, 0.68, 0.86], ys = [0.58, 0.73, 0.88];
+      for (const fx of xs) for (const fy of ys) {
+        const cx = W * fx, cy = H * fy, l = cx - R * 1.5, r = cx + R * 1.5, t = cy - R * 0.8, b = cy + R * 0.8;
+        let cover = 0;
+        for (let k = 0; k < oN; k++) {
+          const w = Math.min(r, oR[k]) - Math.max(l, oL[k]), h = Math.min(b, oB[k]) - Math.max(t, oT[k]);
+          if (w > 0 && h > 0) cover += w * h;
+        }
+        const score = cover / ((r - l) * (b - t)) + 0.18 * Math.hypot(cx - homeX, cy - homeY) / W + (fy < 0.6 ? 0.06 : 0);
+        if (score < best) { best = score; bx = cx; by = cy; }
+      }
+      homeX = bx; homeY = by;
+    };
+
+    const INK = { dark: ['244,240,232', '214,190,140'], light: ['24,36,65', '110,90,44'] };
+    const counts = new Uint16Array(stations.length);
+
+    const update = (dt, t) => {
+      if (!glyph) return;
+      dt = Math.max(dt, 1 / 240);
+      // how fast the page is moving, so the flock can trail behind it
+      const sy = window.scrollY;
+      const rawV = (sy - lastY) / dt;
+      scrollV = lerp(scrollV, rawV, 1 - Math.pow(0.02, dt));
+      lastY = sy;
+      if (Math.abs(rawV) > 1500) lastRush = t;
+
+      // A fling or a hard shake: the flock holds together and rides along with you, and only picks
+      // a drawing to settle into once the page slows down.
+      rushing = t - lastRush < 0.18;
+      const calm = 1 - clamp((Math.abs(scrollV) - 300) / 900);
+      const weights = stations.map((s) => s.weight());
+      stations.forEach((s, k) => { if (weights[k] > 0.3) s.prep(t); });
+      gather();
+
+      // Where the flock gathers: open sky in the lower part of the screen, rechecked as the page
+      // moves under it; tugged up when you scroll fast, as if it were trailing you; quieter and
+      // tighter once you stop to read, and nearly out of sight while you type.
+      const typing = document.activeElement && document.activeElement.matches('input, textarea, select');
+      const resting = typing || t - lastScroll > 2.6;
+      const pace = clamp(Math.abs(scrollV) / 1400);
+      const R = (small ? 78 : 132) * (resting ? 0.55 : 0.85 + 0.4 * pace);
+      if (first) { homeX = W * 0.7; homeY = H * 0.8; }
+      if (t - lastPick > (resting ? 2.5 : 0.7)) { lastPick = t; pickHome(R); }
+      const hx = homeX + W * (0.1 * Math.sin(t * 0.17) + 0.035 * Math.sin(t * 0.53 + 2)), hy = homeY + H * (0.04 * Math.sin(t * 0.29 + 1) + 0.015 * Math.sin(t * 0.71)) - clamp(scrollV * 0.05, -90, 90);
+      avx += ((hx - ax) * 2.2 - avx * 2.5) * dt; avy += ((hy - ay) * 2.2 - avy * 2.5) * dt;
+      ax += avx * dt; ay += avy * dt;
+      if (first) { ax = hx; ay = hy; }
+      const FLOW = (small ? 70 : 96) * (resting ? 0.7 : 1);
+      const steer = 1 - Math.exp(-2.6 * dt);
+
+      counts.fill(0);
+      for (let i = 0; i < N; i++) {
+        // A dot stays with its station while that station's pull holds, and lets go once it fades.
+        // A flying dot joins the strongest station that's pulling hard enough, unless you're rushing.
+        // (Different thresholds for joining and leaving, so a hovering scroll can't flip it back and forth.)
+        let s = at[i];
+        if (s >= 0 && !(weights[s] > lag[i] + 0.27)) s = -1;
+        if (s < 0 && !rushing) {
+          let best = 0;
+          for (let k = 0; k < weights.length; k++) if (weights[k] > lag[i] + 0.43 && weights[k] > best) { s = k; best = weights[k]; }
+        }
+        const fresh = s !== at[i];
+        if (fresh) {
+          // A dot let go somewhere off the screen (its drawing had scrolled away) doesn't streak
+          // back across the page: it quietly rejoins the flock and fades in there.
+          if (s < 0 && at[i] >= 0 && (y[i] < -30 || y[i] > H + 30 || x[i] < -30 || x[i] > W + 30)) rejoin[i] = 1;
+          at[i] = s; landed[i] = 0; since[i] = 0;
+        }
+
+        if (s >= 0) {
+          stations[s].target(i);
+          if (first) { x[i] = tx[i]; y[i] = ty[i]; landed[i] = 1; }
+          else if (landed[i]) {
+            // on its spot: ride along with it exactly, keeping a gentle version of its speed for
+            // when it takes off (a fast scroll shouldn't fling it across the screen)
+            let nvx = (tx[i] - x[i]) / dt, nvy = (ty[i] - y[i]) / dt;
+            const nsp = Math.hypot(nvx, nvy);
+            if (nsp > 240) { nvx *= 240 / nsp; nvy *= 240 / nsp; }
+            vx[i] = nvx; vy[i] = nvy;
+            x[i] = tx[i]; y[i] = ty[i];
+          } else {
+            // It travels with the thing it's headed for (so scrolling, or a turning drawing, never
+            // leaves it behind), and closes the rest of the gap on a spring that firms up the longer
+            // it's been on its way. On the way in, each bird swings wide to its own side and the
+            // flow jostles it, so the flock arrives in sweeping curves rather than straight lines.
+            if (!fresh) { x[i] += tx[i] - ptx[i]; y[i] += ty[i] - pty[i]; }
+            since[i] += dt;
+            const urge = 1 + 3 * smooth((since[i] - 0.35) / 0.8);
+            const K = 40 * stiff[i] * urge, D = 1.5 * Math.sqrt(K);
+            const ddx = tx[i] - x[i], ddy = ty[i] - y[i], dd = Math.hypot(ddx, ddy) + 0.01;
+            let gx = tx[i], gy = ty[i];
+            if (dd > 30) {
+              const arc = Math.min(dd * 0.3, 120) * (ph[i] < Math.PI ? 1 : -1) * (0.5 + 0.5 * stiff[i]) / urge;
+              gx += (-ddy / dd) * arc; gy += (ddx / dd) * arc;
+              let fx = 0, fy = 0;
+              for (const w of WAVES) { const c = w[4] * Math.cos(w[0] * x[i] + w[1] * y[i] + w[2] * t + w[3]); fx += c * w[5]; fy += c * w[6]; }
+              const jostle = Math.min(1, dd / 220) * 900 * dt / WSUM;
+              vx[i] += fx * jostle; vy[i] += fy * jostle;
+            }
+            vx[i] += ((gx - x[i]) * K - vx[i] * D) * dt;
+            vy[i] += ((gy - y[i]) * K - vy[i] * D) * dt;
+            x[i] += vx[i] * dt; y[i] += vy[i] * dt;
+            const gap = Math.abs(tx[i] - x[i]) + Math.abs(ty[i] - y[i]);
+            if (gap < 4 || (gap < 14 && since[i] > 0.9)) { landed[i] = 1; x[i] = tx[i]; y[i] = ty[i]; }
+          }
+          ptx[i] = tx[i]; pty[i] = ty[i];
+          if (landed[i]) counts[s]++;
+          continue;
+        }
+
+        // --- in the air: ride the flow, keep near the flock, stream around things, dodge the cursor ---
+        if (first || rejoin[i]) { x[i] = ax + su[i] * R * 1.4; y[i] = ay + sv[i] * R * 0.7; vx[i] = vy[i] = 0; if (rejoin[i]) { al[i] = 0; rejoin[i] = 0; } }
+        let fx = 0, fy = 0;
+        for (const w of WAVES) { const c = w[4] * Math.cos(w[0] * x[i] + w[1] * y[i] + w[2] * t + w[3]); fx += c * w[5]; fy += c * w[6]; }
+        let dvx = (fx / WSUM) * FLOW * 0.6 + avx, dvy = (fy / WSUM) * FLOW * 0.6 + avy;
+        let ex = 0, ey = 0;
+        for (const w of EDDIES) { const c = w[4] * Math.cos(w[0] * x[i] + w[1] * y[i] + w[2] * t + w[3]); ex += c * w[5]; ey += c * w[6]; }
+        dvx += (ex / ESUM) * FLOW * 0.55; dvy += (ey / ESUM) * FLOW * 0.55;
+        // the whole cloud wheels about its middle, now one way, now the other
+        // (the spin tops out a little beyond the flock's edge, so a straggler isn't flung wide)
+        const rx = x[i] - ax, ry = y[i] - ay, rr = Math.hypot(rx, ry) + 0.01;
+        const reach = Math.min(1, (R * 1.4) / rr), stretch = small ? 1.2 : 1.7;
+        const wheel = 0.85 * Math.sin(t * 0.07 + 1) * (0.75 + 0.5 * stiff[i]) * reach;
+        dvx += -ry * wheel * stretch; dvy += rx * wheel / stretch;
+        const ox = -rx, oy = -ry * 1.9, od = Math.hypot(ox, oy) + 0.01;
+        const pull = clamp((od - R) / R, 0, 3) * 190 * (1 - 0.75 * near[i]);
+        dvx += (ox / od) * pull; dvy += (oy / od) * pull / 1.9;
+        dvx += 14 * Math.sin(ph[i] + t * 2.3); dvy += 10 * Math.cos(ph[i] * 1.3 + t * 1.9);
+        vx[i] += (dvx - vx[i]) * steer * stiff[i]; vy[i] += (dvy - vy[i]) * steer * stiff[i];
+        if (calm > 0.05) avoid(i, (small ? 700 : 2600) * calm, dt, -1e4, -1e4); else { inside[i] = 0; near[i] = 0; }
+        // keep the flock on the screen, and hurry back any bird that got left off it
+        const top = 64, lo = 8, hi = W - 8, bottom = H - 8;
+        const offX = x[i] < lo ? lo - x[i] : x[i] > hi ? hi - x[i] : 0, offY = y[i] < top ? top - y[i] : y[i] > bottom ? bottom - y[i] : 0;
+        if (offX || offY) { vx[i] += offX * 9 * dt; vy[i] += offY * 9 * dt; }
+        const away = Math.abs(offX) + Math.abs(offY);
+        const mx = x[i] - mouse.x, my = y[i] - mouse.y, m2 = mx * mx + my * my;
+        if (m2 < 8100) { const d = Math.sqrt(m2) + 1, f = (1 - d / 90) * 2600 * dt; vx[i] += (mx / d) * f; vy[i] += (my / d) * f; }
+        const sp = Math.hypot(vx[i], vy[i]), cap = 340 + Math.min(1500, away * 4);
+        if (sp > cap) { vx[i] *= cap / sp; vy[i] *= cap / sp; }
+        x[i] += vx[i] * dt; y[i] += vy[i] * dt;
+      }
+
+      // drawings fade in as their dots land, and out as they leave
+      const ease = first ? 1 : 1 - Math.pow(0.001, dt);
+      stations.forEach((st, k) => { if (st.eng) st.eng.fade += (smooth((counts[k] / N - 0.45) / 0.4) - st.eng.fade) * ease; });
+
+      // --- draw ---
+      shade();
+      const wipe = year && year.wipe;
+      const pr = photo ? photo.getBoundingClientRect() : null;
+      const quiet = typing ? 0.25 : 1;
+      const fadeRate = first ? 1 : 1 - Math.pow(0.0004, dt);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+      ctx.lineCap = 'round';
+      ctx.lineWidth = small ? 1.6 : 1.8;
+      // bucket by ink and by how faded, then stroke each bucket once
+      const paths = new Map();
+      for (let i = 0; i < N; i++) {
+        const s = at[i];
+        let a = (inside[i] ? 0.3 : 0.85 * (1 - 0.6 * near[i])) * quiet;
+        if (s >= 0) {
+          const st = stations[s];
+          const dist = Math.abs(tx[i] - x[i]) + Math.abs(ty[i] - y[i]);
+          if (st.hidden) a = landed[i] ? (st.eng && y[i] < st.edge ? 1 - st.eng.fade : 0) : clamp(dist / 14);
+          const offT = Math.max(0, -ty[i] - 60, ty[i] - H - 60, -tx[i] - 60, tx[i] - W - 60);
+          if (offT > 0 && !landed[i]) a *= clamp(1 - offT / 260);
+          else if (st.absorb) a = landed[i] ? 0 : clamp(dist / st.absorb);
+          else a = 0.9;
+        }
+        al[i] += (a - al[i]) * fadeRate;
+        if (al[i] < 0.06 || y[i] < -10 || y[i] > H + 10 || x[i] < -10 || x[i] > W + 10) continue;
+        const row = rows[Math.max(0, Math.min(rows.length - 1, Math.floor(y[i] / ROW)))];
+        let dark = row === 1;
+        if (wipe && x[i] > wipe.left && x[i] < wipe.right && y[i] > wipe.top && y[i] < wipe.bottom) dark = true;
+        else if (pr && x[i] > pr.left && x[i] < pr.right && y[i] > pr.top && y[i] < pr.bottom) dark = true;
+        const key = (dark ? 'dark' : 'light') + gold[i] + Math.min(3, Math.round(al[i] * 3));
+        let path = paths.get(key);
+        if (!path) { path = new Path2D(); paths.set(key, path); }
+        // in flight a dot stretches into a short dash along its heading, with a flicker of wingbeat
+        const sp = Math.hypot(vx[i], vy[i]);
+        const len = s < 0 || !landed[i] ? clamp((sp - 25) * 0.022, 0, 6) * (0.8 + 0.2 * Math.sin(ph[i] + t * 15)) : 0;
+        const ux = sp > 1 ? vx[i] / sp : 1, uy = sp > 1 ? vy[i] / sp : 0;
+        path.moveTo(x[i] - ux * len * 0.5, y[i] - uy * len * 0.5);
+        path.lineTo(x[i] + ux * len * 0.5 + 0.01, y[i] + uy * len * 0.5);
+      }
+      paths.forEach((path, key) => {
+        const dark = key.startsWith('dark'), g = Number(key[dark ? 4 : 5]), lvl = Number(key[key.length - 1]);
+        ctx.strokeStyle = `rgba(${INK[dark ? 'dark' : 'light'][g]},${(lvl / 3).toFixed(2)})`;
+        ctx.stroke(path);
+      });
+      first = false;
+    };
+
+    // For the test suite only: a page that sets window.__swarmDebug before load can read the flock's state.
+    if (window.__swarmDebug) window.__swarm = { N, x, y, vx, vy, at, landed, al, names: stations.map((st) => st.name), get W() { return W; }, get H() { return H; } };
+    return { el: null, active: true, measure, update };
+  }
 
   /* =========================================================================
      2. Halftone photo: color comes through in growing dots, swept by scrolling,
@@ -1366,15 +2211,29 @@
   }
 
   /* =========================================================================
-     4. Split-flap board for Pitch Day
+     4. Split-flap board for Pitch Day. Between flips to the date it counts the
+     days down and runs through past GovLab startups; it also takes your
+     startup's name, and doubles as a three-minute pitch clock.
      ========================================================================= */
   function splitFlap(band) {
     const board = band.querySelector('.board');
     const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$';
     const SIZES = [7, 11];
     const DEFAULT = board.dataset.rows.split('|');
-    // Between flips to Pitch Day, the board runs through past GovLab startups.
-    const playlist = [DEFAULT, ...(board.dataset.alumni || '').split('|').filter(Boolean).map((name) => ['ALUMS', name])];
+    const said = band.querySelector('.board-said');
+    const tell = (text) => { if (said) said.textContent = text; };
+
+    // Days to go, from the board's date.
+    const playlist = [DEFAULT];
+    if (board.dataset.date) {
+      const today = new Date(); today.setHours(0, 0, 0, 0);
+      const days = Math.round((new Date(board.dataset.date + 'T00:00:00') - today) / 864e5);
+      if (days === 0) playlist.push(['TONIGHT', '6 PM']);
+      else if (days === 1) playlist.push(['1 DAY', 'TO GO']);
+      else if (days > 1 && days < 100) playlist.push([`${days} DAYS`, 'TO GO']);
+    }
+    playlist.push(...(board.dataset.alumni || '').split('|').filter(Boolean).map((name) => ['ALUMS', name]));
+
     const animated = motion && Boolean(Element.prototype.animate);
     const cells = [];
     SIZES.forEach((size, ri) => {
@@ -1414,9 +2273,10 @@
     const busy = () => cells.some((c) => c.busy);
     const center = (text, size) => { const pad = Math.max(0, Math.floor((size - text.length) / 2)); return (' '.repeat(pad) + text).padEnd(size, ' ').slice(0, size); };
 
-    // Put two lines on the board. Cells that change spin through a few letters first, left to right.
+    // Put two lines on the board. Cells that change spin through a few letters first, left to right;
+    // a clock tick just flips the digits that changed.
     let lines = DEFAULT;
-    const show = (next, { all = false, intro = false } = {}) => {
+    const show = (next, { all = false, intro = false, tick = false } = {}) => {
       lines = next;
       const text = next.map((t, r) => center(t, SIZES[r])).join('');
       cells.forEach((c, i) => {
@@ -1424,6 +2284,7 @@
         if (!all && ch === c.target) return;
         c.target = ch;
         if (!animated) { face(c, ch); return; }
+        if (tick) { settle(c); return; }
         const turns = intro ? 4 + Math.floor(i * 0.5) + Math.floor(Math.random() * 3) : 2 + Math.floor(Math.random() * 3);
         setTimeout(() => { c.turns = Math.max(c.turns, turns); settle(c); }, i * (intro ? 45 : 34));
       });
@@ -1432,30 +2293,83 @@
     const start = DEFAULT.map((t, r) => center(t, SIZES[r])).join('');
     cells.forEach((c, i) => { c.target = start[i]; face(c, animated ? ' ' : c.target); });
 
+    // --- the pitch clock: three minutes to pitch, then about thirty seconds per judge's question ---
+    const clockBtn = band.querySelector('.clock-btn');
+    const clock = { on: false, timer: 0, end: 0, phase: '' };
+    const fmt = (s) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+    const stopClock = (finished) => {
+      clearInterval(clock.timer);
+      if (!clock.on) return;
+      clock.on = false;
+      band.classList.remove('clock-on');
+      if (clockBtn) { clockBtn.textContent = 'Run the three-minute pitch clock'; clockBtn.setAttribute('aria-pressed', 'false'); }
+      if (finished) {
+        show(['TIME', 'THANK YOU']);
+        tell('Time. Thank you.');
+        setTimeout(() => { if (!clock.on) { show(typed ? ['UP NEXT', typed] : DEFAULT); next(); } }, 3200);
+      } else {
+        show(typed ? ['UP NEXT', typed] : DEFAULT);
+        tell('Pitch clock stopped.');
+        next();
+      }
+    };
+    const tickClock = () => {
+      const left = Math.max(0, Math.ceil((clock.end - Date.now()) / 1000));
+      if (clock.phase === 'pitch') {
+        show(['PITCH', fmt(left)], { tick: true });
+        if (left === 120) tell('Two minutes left.');
+        else if (left === 60) tell('One minute left.');
+        else if (left === 30) tell('Thirty seconds left.');
+        if (left === 0) {
+          clock.phase = 'q'; clock.end = Date.now() + 30000;
+          show(['Q AND A', '0:30']);
+          tell('Time. Each judge now gets about thirty seconds for a question.');
+        }
+      } else if (left === 0) stopClock(true);
+      else show(['Q AND A', fmt(left)], { tick: true });
+    };
+    const startClock = () => {
+      clearTimeout(cycle);
+      clock.on = true; clock.phase = 'pitch'; clock.end = Date.now() + 180000;
+      band.classList.add('clock-on');
+      if (clockBtn) { clockBtn.textContent = 'Stop the clock'; clockBtn.setAttribute('aria-pressed', 'true'); }
+      const r = board.getBoundingClientRect();
+      if (r.top < 70 || r.bottom > window.innerHeight) board.scrollIntoView({ behavior: motion ? 'smooth' : 'auto', block: 'center' });
+      show(['PITCH', '3:00']);
+      tell('Pitch clock started. You have three minutes.');
+      clock.timer = setInterval(tickClock, 250);
+    };
+    if (clockBtn) {
+      clockBtn.hidden = false;
+      clockBtn.addEventListener('click', () => (clock.on ? stopClock(false) : startClock()));
+    }
+
     // "Put your startup on the board": typing puts UP NEXT and the name up, once you pause.
     let typed = '', visible = false, step = 0, cycle = 0;
     const next = () => {
       clearTimeout(cycle);
-      if (!animated || !visible || typed || playlist.length < 2) return;
+      if (!animated || !visible || typed || clock.on || playlist.length < 2) return;
       cycle = setTimeout(() => {
-        if (!busy()) { step = (step + 1) % playlist.length; show(playlist[step]); }
+        if (!busy() && !clock.on) { step = (step + 1) % playlist.length; show(playlist[step]); }
         next();
       }, step === 0 ? 6500 : 4600);
     };
     const form = band.querySelector('.board-try');
     if (form) {
       const input = form.querySelector('input');
-      const said = form.querySelector('.board-said');
       const clean = (v) => v.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/[^A-Z0-9 &$!?.'-]/g, '').replace(/\s+/g, ' ').trim().slice(0, SIZES[1]);
       let timer = 0;
       const apply = () => {
         clearTimeout(timer);
         const name = clean(input.value);
+        // The name travels on to the sign-up form.
+        document.dispatchEvent(new CustomEvent('govlab:startup', { detail: { name: input.value.trim().slice(0, 60), board: name } }));
         if (name === typed) return;
         typed = name;
         step = 0;
+        if (clock.on) stopClock(false);
         show(name ? ['UP NEXT', name] : DEFAULT);
-        said.textContent = name ? `The board now reads: Up next, ${name}.` : 'The board reads: Week 10, Pitch Day.';
+        tell(name ? `The board now reads: Up next, ${name}.` : 'The board reads: December 1st, Pitch Day.');
         next();
       };
       input.addEventListener('input', () => { clearTimeout(timer); timer = setTimeout(apply, 280); });
@@ -1468,7 +2382,7 @@
       for (const entry of entries) {
         visible = entry.isIntersecting;
         if (visible && armed) { armed = false; show(lines, { all: true, intro: true }); }
-        if (!visible && entry.boundingClientRect.top > 0 && !busy()) {
+        if (!visible && entry.boundingClientRect.top > 0 && !busy() && !clock.on) {
           // Scrolled back above the board: blank it, so it flips in again next time.
           armed = true; step = 0;
           if (!typed) lines = DEFAULT;
@@ -1477,7 +2391,7 @@
         next();
       }
     }, { threshold: 0.45 }).observe(board);
-    board.addEventListener('click', () => { show(lines, { all: true }); next(); });
+    board.addEventListener('click', () => { if (!clock.on) { show(lines, { all: true }); next(); } });
   }
 
   /* =========================================================================
@@ -1506,15 +2420,41 @@
   /* =========================================================================
      Wire it all up on one animation loop; sleep what's offscreen
      ========================================================================= */
+  // How far off Pitch Day is, along the bottom of the hero. Once the day has passed, the bar steps aside.
+  const nextBar = document.querySelector('.hero-next[data-date]');
+  if (nextBar) {
+    const today = new Date(); today.setHours(0, 0, 0, 0);
+    const days = Math.round((new Date(nextBar.dataset.date + 'T00:00:00') - today) / 864e5);
+    const soon = nextBar.querySelector('.soon');
+    if (days < 0) nextBar.hidden = true;
+    else if (soon) { soon.textContent = days === 0 ? 'Today' : days === 1 ? 'Tomorrow' : `${days} days away`; soon.hidden = false; }
+  }
+
+  // The nav marks the section you're in.
+  const navLinks = [...document.querySelectorAll('.site-nav a')].filter((a) => a.hash.length > 1 && document.querySelector(a.hash));
+  const navTargets = navLinks.map((a) => document.querySelector(a.hash));
+  let navCur = -2, navQueued = false;
+  const navUpdate = () => {
+    navQueued = false;
+    const line = window.innerHeight * 0.4;
+    let cur = -1;
+    navTargets.forEach((t, i) => { if (t.getBoundingClientRect().top <= line) cur = i; });
+    if (cur === navCur) return;
+    navCur = cur;
+    navLinks.forEach((a, i) => { a.classList.toggle('is-current', i === cur); if (i === cur) a.setAttribute('aria-current', 'location'); else a.removeAttribute('aria-current'); });
+  };
+  window.addEventListener('scroll', () => { if (!navQueued) { navQueued = true; requestAnimationFrame(navUpdate); } }, { passive: true });
+  navUpdate();
+
   const tasks = [];
   const safely = (name, fn) => { try { const t = fn(); if (t && t.update) tasks.push(t); return t; } catch (err) { console.warn(`GovLab: ${name} skipped`, err); return null; } };
 
-  const objects = [
-    safely('hero drawing', () => heroObject(document.querySelector('.hero-object'))),
-    safely('stage drawing', () => stagesObject(document.querySelector('.program'))),
-  ].filter(Boolean);
-  safely('year', () => yearRail(document.querySelector('.year')));
+  const hero = safely('hero drawing', () => heroObject(document.querySelector('.hero-object')));
+  const stages = safely('stage drawing', () => stagesObject(document.querySelector('.program')));
+  const year = safely('year', () => yearRail(document.querySelector('.year')));
   safely('board', () => splitFlap(document.querySelector('.pitch')));
+  const bookend = safely('footer drawing', () => bookendObject(document.querySelector('.site-footer')));
+  const objects = [hero, stages, bookend].filter(Boolean);
 
   if (motion) {
     // Once the headline has risen, drop the animation so the text sits untransformed.
@@ -1533,7 +2473,7 @@
 
     // Section headings rise into place the way the headline does.
     safely('headings', () => {
-      const heads = [...document.querySelectorAll('#program-title, #year-title, #apply-title, .included h3')];
+      const heads = [...document.querySelectorAll('#program-title, #year-title, #apply-title, .included h3, .sign-line')];
       heads.forEach((h) => {
         const outer = document.createElement('span'), inner = document.createElement('span');
         outer.className = 'rise-line'; inner.className = 'rise';
@@ -1545,10 +2485,42 @@
       heads.forEach((h) => hio.observe(h));
     });
 
+    // The pour and the viewfinder span scenes, so they always run; they're cheap when idle.
+    safely('pour', () => pourObject(hero, document.querySelector('.outcomes')));
+    safely('swarm', () => swarmObject({ fig: document.querySelector('.figure'), stages, year, board: document.querySelector('.board'), bookend }));
+    safely('viewfinder', () => {
+      const q = (s) => document.querySelector(s);
+      const header = q('.site-header');
+      const at = (sel, extra) => { const el = q(sel); return el ? { el, rect: rectOf(el), ...extra } : null; };
+      const fig = q('.figure');
+      return viewfinder([
+        hero && { el: hero.engine.canvas, rect: drawingRect(hero.engine), pad: 28 },
+        fig && { el: fig, rect: textRect(fig), pad: 22, light: true },
+        at('.photo .duotone', { pad: 12, light: true }),
+        stages && at('.stage-frame .frame'),
+        year && at('.year-crop', { light: true }),
+        // While the Dec 1 card grows into Pitch Day, the frame grows with it.
+        year && {
+          el: q('.year-wipe'), lead: true,
+          when: () => Boolean(year.wipe && year.wipe.cover < 0.6),
+          get light() { return Boolean(year.wipe && year.wipe.k < 0.12); },
+          rect: () => {
+            const w = year.wipe, k = w.k, top = (header ? header.offsetHeight : 68) + 22;
+            return { left: w.left + 22 * k, top: w.top + top * k, right: w.right - 22 * k, bottom: w.bottom - 22 * k };
+          },
+        },
+        at('.board', { pad: 20 }),
+        at('.lineup .logos', { pad: 16 }),
+        at('.pitch-actions .button', { pad: 12 }),
+        at('.signup', { pad: 22, light: true }),
+        bookend && { el: bookend.engine.canvas, rect: drawingRect(bookend.engine), pad: 24 },
+      ]);
+    });
+
     const watcher = new IntersectionObserver((entries) => {
       for (const entry of entries) { const task = tasks.find((t) => t.el === entry.target); if (task) task.active = entry.isIntersecting; }
     }, { rootMargin: '150px 0px' });
-    tasks.forEach((t) => watcher.observe(t.el));
+    tasks.forEach((t) => { if (t.el) watcher.observe(t.el); });
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => { tasks.forEach((t) => t.measure && t.measure()); measureShades(); queue(); });
     }
@@ -1609,6 +2581,19 @@
     }
     return firstInvalid;
   };
+
+  // A startup typed on the Pitch Day board carries down to the form, unless you've already
+  // typed something different here.
+  const startup = form.elements.startup;
+  const carry = document.querySelector('.carry');
+  const carryName = carry && carry.querySelector('.carry-name');
+  let ownStartup = false;
+  if (startup) startup.addEventListener('input', () => { ownStartup = startup.value.trim() !== ''; });
+  document.addEventListener('govlab:startup', (e) => {
+    const { name, board } = e.detail;
+    if (startup && !ownStartup) startup.value = name;
+    if (carry) { carry.hidden = !board; if (board) carryName.textContent = board; }
+  });
 
   const say = (message, failed = false) => {
     status.className = failed ? 'form-status fail' : 'form-status';
@@ -1678,6 +2663,7 @@
         `Email: ${data.get('email')}`,
         `I am a: ${data.get('role')}`,
         `School or institution: ${data.get('school') || 'n/a'}`,
+        `Startup or idea: ${data.get('startup') || 'n/a'}`,
       ].join('\n');
       window.location.href = `mailto:${CONTACT}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       say(`Thanks, ${firstName}. Your email app should open with a message to ${CONTACT}. Send it and you’re on the list.`);
